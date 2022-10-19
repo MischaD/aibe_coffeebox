@@ -47,16 +47,22 @@ def add_user(conn):
 
     conn.commit()
 
-def update_user(conn,user):
+def update_user_debt(conn,user):
     cur = conn.cursor()
-    cur.execute("INSERT INTO statistics (balance) WHERE VALUES(?)", (user.balance,))
+    cur.execute("UPDATE statistics SET balance=? WHERE id=(?)", (user.balance,user.id))
+    cur.execute("UPDATE statistics SET consumed=? WHERE id=(?)", (user.consumed,user.id))
+
+    #conn.commit()
 
 
 if __name__ == '__main__':
-    database = "database/coffeebase.sqlite3"
+    database = "database/kittybase.sqlite3"
 
     # create a database connection
     conn = create_connection(database)
     with conn:
         get_products_list(conn)
-        get_users(conn)
+        bla = (1,'kokolores')
+        update_user_debt(conn,bla)
+        bla = get_users(conn)
+        print(bla)
