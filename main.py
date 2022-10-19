@@ -6,7 +6,7 @@ from user import User
 from db_functions import *
 
 class CafeApp(Tk):
-    database = "database/coffeebase.sqlite3"
+    database = "database/kittybase.sqlite3"
     
     def __init__(self):
         super().__init__()
@@ -36,7 +36,6 @@ class CafeApp(Tk):
         
         self.users = []
         conn = create_connection(self.database)
-
         with conn:
             users = get_users(conn)
             for user in users:
@@ -64,13 +63,17 @@ class CafeApp(Tk):
 
     def user_selected(self,event):
         selected_item = self.content_tree.selection()
-        user_id = self.content_tree.index(selected_item)
+        user_idx = self.content_tree.index(selected_item)
 
         item_price = self.popup_window()
-        self.users[user_id].calculate(item_price)
+        self.users[user_idx].calculate_debt(item_price)
         # Update the tree.
-        user = self.users[user_id]
+        user = self.users[user_idx]
         self.content_tree.item(selected_item[0], values=[user.username, user.balance])
+        # Update database.
+        conn = create_connection(self.database)
+        with conn:
+            update_user_debt(conn,user)
 
 
     def popup_window(self):

@@ -8,6 +8,6 @@ class User():
     consumed: float = 0.0
     paid: float = 0.0
 
-    def calculate(self,itemprice):
+    def calculate_debt(self,itemprice):
         self.balance = self.balance - itemprice
         self.consumed = self.consumed + itemprice
