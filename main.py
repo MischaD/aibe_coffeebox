@@ -18,7 +18,7 @@ class CafeApp(Tk):
         self.resizable(False,False)
 
         self.frame_header = ttk.Frame()
-        self.frame_header.pack()
+        self.frame_header.pack(pady=20)
         self.frame_header.columnconfigure(0, weight=1)
         self.frame_header.columnconfigure(1, weight=2)
         
@@ -32,6 +32,7 @@ class CafeApp(Tk):
 
         self.frame_content = ttk.Frame()
         self.frame_content.pack()
+        self.frame_content.columnconfigure(0, weight=1)
         self.content_tree = self.create_tree(self.frame_content)
         
         self.users = []
@@ -48,16 +49,17 @@ class CafeApp(Tk):
 
     def create_tree(self,parent):
         columns = ('name', 'balance')
-        tree = ttk.Treeview(parent, columns=columns, show='headings')
-        tree.grid(column=0, row=0, rowspan=3)
+        tree = ttk.Treeview(parent, columns=columns, show='headings',height=14)
         tree.heading(columns[0], text='Name')
+        tree.column(columns[0],anchor=CENTER, stretch=NO, width=250)
         tree.heading(columns[1], text='Balance')
+        tree.column(columns[1],anchor=CENTER, stretch=NO, width=250)
         tree.bind('<<TreeviewSelect>>', self.user_selected)
-        tree.grid(column=0, row=0, rowspan=3)
+        tree.grid(column=0, row=0)
     
         scrollbar = ttk.Scrollbar(parent, orient=VERTICAL, command=tree.yview)
         tree.configure(yscroll=scrollbar.set)
-        scrollbar.grid(row=0, column=1, rowspan=3, sticky='ns')
+        scrollbar.grid(row=0, column=1, sticky='ns')
 
         return tree
 
