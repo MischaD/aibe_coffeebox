@@ -14,8 +14,10 @@ class CafeApp(Tk):
         # Configure the toplevel
         self.title("Cafe App")
         #self.state('zoomed')
+        #self.attributes('-fullscreen','True')
         self.geometry('600x400+100+100')
         self.resizable(False,False)
+        
 
         self.frame_header = ttk.Frame()
         self.frame_header.pack(pady=20)
@@ -47,7 +49,7 @@ class CafeApp(Tk):
         for user in self.users:
            self.content_tree.insert('', END, values=[user.username, user.balance])
 
-        self.wm_attributes('-type','splash') #('-fullscreen', 'True')
+        self.wm_attributes('-type','splash')
 
     def create_tree(self,parent):
         columns = ('name', 'balance')
@@ -87,6 +89,7 @@ class CafeApp(Tk):
         return item_price
 
 class PopupWindow():
+    item_price = 0
     def __init__(self, parent):
         self.parent = parent      
         self.products_dict = parent.items_price_dict
@@ -96,6 +99,9 @@ class PopupWindow():
         label = Label(self.toplevel, text="Hello World!")
         label.pack(fill='x', padx=50, pady=5)
 
+        self.center_win()
+        self.wm_attributes('-type','splash')
+
         self.button_item = []
         for item in products:
             self.button_item = Button(self.toplevel, text=item, command=lambda m=item:self.get_selected_item_price(m))
@@ -103,6 +109,14 @@ class PopupWindow():
         
         self.button_close = Button(self.toplevel, text="Close", command=self.toplevel.destroy)
         self.button_close.pack(fill='x')
+
+    def center_win(self):
+        width = int(self.parent.winfo_screenwidth() / 4)
+        height = int(self.parent.winfo_screenheight() / 2)
+        x = int(self.parent.winfo_screenwidth() // 2 - width // 2)
+        y = int(self.parent.winfo_screenheight() // 2 - height // 2)
+
+        self.toplevel.geometry(f'{width}x{height}+{x}+{y}')
 
     def get_selected_item_price(self,item):
         self.item_price = self.products_dict[item]
