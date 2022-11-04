@@ -47,6 +47,8 @@ class CafeApp(Tk):
         for user in self.users:
            self.content_tree.insert('', END, values=[user.username, user.balance])
 
+        self.wm_attributes('-type','splash') #('-fullscreen', 'True')
+
     def create_tree(self,parent):
         columns = ('name', 'balance')
         tree = ttk.Treeview(parent, columns=columns, show='headings',height=14)
@@ -77,6 +79,8 @@ class CafeApp(Tk):
         with conn:
             update_user_debt(conn,user)
 
+    def exit():
+        pass
 
     def popup_window(self):
         item_price = PopupWindow(self).get_price()
