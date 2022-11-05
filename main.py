@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from user import User
 from db_functions import *
+import tkinter.font as font
 
 
 class CafeApp(Tk):
@@ -43,15 +44,24 @@ class CafeApp(Tk):
                 self.users.append(User(id=user[0], username=user[1]))
             self.items_price_dict = get_products_list(conn)
 
-        # add data to the treeview
+        # Configure font tag for treeview columns.
+        style = ttk.Style()
+        f = font.nametofont('TkTextFont')
+        f.configure(size=20)
+        self.content_tree.tag_configure('TkTextFont', font=font.nametofont('TkTextFont'))
+        style.configure('Treeview', rowheight=f.metrics('linespace'))
+
+        # Add data to the treeview.
         for user in self.users:
-            self.content_tree.insert('', END, values=[user.username, user.balance])
+            self.content_tree.insert('', END, values=[user.username, user.balance], tags='TkTextFont')
 
         self.wm_attributes('-type', 'splash')
 
     def create_tree(self, parent):
         columns = ('name', 'balance')
-        tree = ttk.Treeview(parent, columns=columns, show='headings', height=14)
+        style = ttk.Style()
+        style.configure("Treeview.Heading",font=(None, 24))
+        tree = ttk.Treeview(parent, columns=columns, show='headings', height=8)
         tree.heading(columns[0], text='Name')
         tree.column(columns[0], anchor=CENTER, stretch=NO, width=250)
         tree.heading(columns[1], text='Balance')
@@ -102,12 +112,17 @@ class PopupWindow:
         self.center_win()
         self.toplevel.wm_attributes('-type', 'splash')
 
+        #  Set font size
+        f = font.Font(size=28)
+
         self.button_item = []
         for item in products:
             self.button_item = Button(self.toplevel, text=item, command=lambda m=item: self.get_selected_item_price(m))
+            self.button_item['font'] = f
             self.button_item.pack(fill='x')
         
         self.button_close = Button(self.toplevel, text="Close", command=self.toplevel.destroy)
+        self.button_close['font'] = f
         self.button_close.pack(fill='x')
 
     def center_win(self):
