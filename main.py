@@ -37,15 +37,16 @@ class CafeApp(Tk):
         self.content_tree = self.create_tree(self.frame_content)
         
         self.users = []
-        conn = create_connection(self.database)
-        with conn:
+        db_conn = create_connection(self.database)
+        with db_conn:
             users = get_users(conn)
             for user in users:
                 self.users.append(User(id=user[0], username=user[1]))
-            self.items_price_dict = get_products_list(conn)
+            self.items_price_dict = get_products_list(db_conn)
 
         # Configure font tag for treeview columns.
         style = ttk.Style()
+        style.configure("Treeview.Heading", height=300)
         f = font.nametofont('TkTextFont')
         f.configure(size=20)
         self.content_tree.tag_configure('TkTextFont', font=font.nametofont('TkTextFont'))
@@ -60,7 +61,7 @@ class CafeApp(Tk):
     def create_tree(self, parent):
         columns = ('name', 'balance')
         style = ttk.Style()
-        style.configure("Treeview.Heading",font=(None, 24))
+        style.configure("Treeview.Heading", font=(None, 24))
         tree = ttk.Treeview(parent, columns=columns, show='headings', height=8)
         tree.heading(columns[0], text='Name')
         tree.column(columns[0], anchor=CENTER, stretch=NO, width=250)
