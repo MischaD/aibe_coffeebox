@@ -18,11 +18,11 @@ class CafeApp(Tk):
         self.geometry('600x400+100+100')
         self.resizable(False, False)
 
+        # Head frame
         self.frame_header = ttk.Frame()
         self.frame_header.pack(pady=20)
         self.frame_header.columnconfigure(0, weight=1)
         self.frame_header.columnconfigure(1, weight=2)
-        
         self.logo = PhotoImage(file='img/cafe_logo.png')
         self.header_logo = ttk.Label(self.frame_header, image=self.logo)
         self.header_logo.grid(column=0, row=0, rowspan=2)
@@ -31,6 +31,7 @@ class CafeApp(Tk):
         self.header_label2 = ttk.Label(self.frame_header, text="asalkdjflajds")
         self.header_label2.grid(column=1, row=1)
 
+        # Content frame
         self.frame_content = ttk.Frame()
         self.frame_content.pack()
         self.frame_content.columnconfigure(0, weight=1)
@@ -39,7 +40,7 @@ class CafeApp(Tk):
         self.users = []
         db_conn = create_connection(self.database)
         with db_conn:
-            users = get_users(conn)
+            users = get_users(db_conn)
             for user in users:
                 self.users.append(User(id=user[0], username=user[1]))
             self.items_price_dict = get_products_list(db_conn)
@@ -86,9 +87,9 @@ class CafeApp(Tk):
         user = self.users[user_idx]
         self.content_tree.item(selected_item[0], values=[user.username, user.balance])
         # Update database.
-        conn = create_connection(self.database)
-        with conn:
-            update_user_debt(conn, user)
+        db_conn = create_connection(self.database)
+        with db_conn:
+            update_user_debt(db_conn, user)
 
     def exit(self):
         pass
