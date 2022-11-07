@@ -13,10 +13,10 @@ class CafeApp(Tk):
 
         # Configure the toplevel
         self.title("Cafe App")
-#        self.state('zoomed')
-#        self.attributes('-fullscreen', 'True')
-        self.geometry('600x400+100+100')
+        self.attributes('-zoomed', True)
+#        self.geometry('600x400+100+100')
         self.resizable(False, False)
+        self.wm_attributes('-type', 'splash')
 
         # Head frame
         self.frame_header = ttk.Frame()
@@ -56,8 +56,6 @@ class CafeApp(Tk):
         # Add data to the treeview.
         for user in self.users:
             self.content_tree.insert('', END, values=[user.username, user.balance], tags='TkTextFont')
-
-        self.wm_attributes('-type', 'splash')
 
     def create_tree(self, parent):
         columns = ('name', 'balance')
