@@ -3,6 +3,7 @@ from tkinter import ttk
 from user import User
 from db_functions import *
 import tkinter.font as font
+from VKeyboard import VKeyboard
 
 
 class CafeApp(Tk):
@@ -11,10 +12,13 @@ class CafeApp(Tk):
     def __init__(self):
         super().__init__()
 
+        # Initiate virtual keyboard
+        VKeyboard(self)
+
         # Configure the toplevel
         self.title("Cafe App")
-        self.attributes('-zoomed', True)
-#        self.geometry('600x400+100+100')
+#        self.attributes('-zoomed', True)
+        self.geometry('600x400+100+100')
         self.resizable(False, False)
         self.wm_attributes('-type', 'splash')
 
@@ -57,6 +61,8 @@ class CafeApp(Tk):
         for user in self.users:
             self.content_tree.insert('', END, values=[user.username, user.balance], tags='TkTextFont')
 
+        self.button_add = ttk.Button()
+
     def create_tree(self, parent):
         columns = ('name', 'balance')
         style = ttk.Style()
@@ -93,11 +99,11 @@ class CafeApp(Tk):
         pass
 
     def popup_window(self):
-        item_price = PopupWindow(self).get_price()
+        item_price = PopupWindowItems(self).get_price()
         return item_price
 
 
-class PopupWindow:
+class PopupWindowItems:
     item_price = 0
 
     def __init__(self, parent):
