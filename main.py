@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from user import User
+from user import *
 from db_functions import *
-import tkinter.font as font
 from VKeyboard import VKeyboard
 
 
@@ -53,7 +52,8 @@ class CafeApp(tk.Tk):
         for user in self.users:
             self.content_tree.insert('', tk.END, values=[user.username, user.balance])
 
-        self.button_add = ttk.Button()
+        self.button_add = ttk.Button(self, text="Add", command=self.call_adduser_popup)
+        self.button_add.pack()
 
     def create_tree(self, parent):
         columns = ('name', 'balance')
@@ -61,7 +61,7 @@ class CafeApp(tk.Tk):
         font_size = 24
         style.configure('Treeview.Heading', font='None, 28')
         style.configure('Treeview', font=f'None, {font_size}', rowheight=int(font_size*1.6))
-        tree = ttk.Treeview(parent, columns=columns, show='headings', height=8)
+        tree = ttk.Treeview(parent, columns=columns, show='headings', height=5)
         tree.heading(columns[0], text='Name')
         tree.column(columns[0], anchor=tk.CENTER, stretch=tk.NO, width=250)
         tree.heading(columns[1], text='Balance')
@@ -79,7 +79,7 @@ class CafeApp(tk.Tk):
         selected_item = self.content_tree.selection()
         user_idx = self.content_tree.index(selected_item[0])
 
-        item_price = self.popup_window()
+        item_price = self.call_items_popup()
         self.users[user_idx].calculate_debt(item_price)
         # Update the tree.
         user = self.users[user_idx]
@@ -92,9 +92,12 @@ class CafeApp(tk.Tk):
     def exit(self):
         pass
 
-    def popup_window(self):
+    def call_items_popup(self):
         item_price = PopupWindowItems(self).get_price()
         return item_price
+
+    def call_adduser_popup(self):
+        PopupNewUser(self)
 
 
 class PopupWindowItems(tk.Toplevel):
@@ -110,6 +113,7 @@ class PopupWindowItems(tk.Toplevel):
         label = ttk.Label(self, text="Hello World!")
         label.pack(fill='x', padx=50, pady=5)
 
+        # Configure window appearance
         self.center_win()
         self.wm_attributes('-type', 'splash')
 
