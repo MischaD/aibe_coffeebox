@@ -39,7 +39,8 @@ class PopupNewUser(tk.Toplevel):
         VKeyboard(self)
 
     def is_invalid(self):
-        print('invalid')
+        # Todo: write invalid popup
+        pass
 
     def validate_entry(self, reason, old_text, edit_text):
         if reason == '0':
