@@ -427,4 +427,6 @@ class VKeyboard(tk.Toplevel):
 
 
 if __name__ == '__main__':
-    VKeyboard.display()
+    root = tk.Tk()
+    VKeyboard(root)
+    root.mainloop()
