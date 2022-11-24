@@ -29,9 +29,11 @@ class CafeApp(tk.Tk):
         self.logo = tk.PhotoImage(file='img/cafe_logo.png')
         self.header_logo = ttk.Label(self.frame_header, image=self.logo)
         self.header_logo.grid(column=0, row=0, rowspan=2)
-        self.header_label1 = ttk.Label(self.frame_header, text="Choose your product wisely!")
+        self.header_label1 = ttk.Label(self.frame_header,
+                                       text="Choose your product wisely!")
         self.header_label1.grid(column=1, row=0)
-        self.header_label2 = ttk.Label(self.frame_header, text="asalkdjflajds")
+        self.header_label2 = ttk.Label(self.frame_header,
+                                       text="asalkdjflajds")
         self.header_label2.grid(column=1, row=1)
 
         # Content frame

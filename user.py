@@ -21,22 +21,25 @@ class PopupNewUser(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.title('New User Data')
-        self.svar_name = tk.StringVar()
+        self.svar_name = tk.StringVar(value="Enter Name")
         self.LabelName = ttk.Label(self,
                                    text='Name',
                                    background='lightblue',
                                    width=10)
         self.LabelName.pack(side=tk.LEFT)
         validate_func = self.register(self.validate_entry)
+        self.keyboard = self.open_keyboard()
+
         self.EntryName = ttk.Entry(self,
-                                   textvariable=self.svar_name,
+                                   textvariable=self.keyboard.exp,
                                    invalidcommand=self.is_invalid,
                                    validate='all',
                                    validatecommand=(validate_func, '%d', '%s', '%S'),
-                                   width=20)
-        self.EntryName.pack(side=tk.RIGHT)
+                                   width=20,
+                                   cursor="boat",
+                                   takefocus=False)
 
-        VKeyboard(self)
+        self.EntryName.pack(side=tk.RIGHT)
 
     def is_invalid(self):
         # Todo: write invalid popup
@@ -50,6 +53,9 @@ class PopupNewUser(tk.Toplevel):
             print('Insert Text:', edit_text, 'to: ', old_text)
             return edit_text in '0123456789'
         return True
+
+    def open_keyboard(self):
+        return VKeyboard(self)
 
 
 if __name__ == "__main__":

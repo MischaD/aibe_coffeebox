@@ -6,7 +6,7 @@ class VKeyboard(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         # Don't show the 'Toplevel' at instantiation
-        super().withdraw()
+#        super().withdraw()
 
         self.title('On Screen Keyboard')
 
