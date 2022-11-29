@@ -31,7 +31,7 @@ class PopupNewUser(tk.Toplevel):
         self.keyboard = self.open_keyboard()
 
         self.EntryName = ttk.Entry(self,
-                                   textvariable=self.keyboard.exp,
+                                   textvariable=self.keyboard.equation,
                                    invalidcommand=self.is_invalid,
                                    validate='all',
                                    validatecommand=(validate_func, '%d', '%s', '%S'),
