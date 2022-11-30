@@ -5,18 +5,8 @@ from tkinter import ttk
 class VKeyboard(ttk.Frame):
     def __init__(self, parent):
         ttk.Frame.__init__(self, parent)
-        #super().__init__(parent)
-        # Don't show the 'Toplevel' at instantiation
-#        super().withdraw()
-
-        #self.title('On Screen Keyboard')
-
-        #self.geometry('1385x320')  # Window size
-        #self.maxsize(width=1385, height=320)
-        #self.minsize(width=1385, height=320)
-
+        self.parent = parent
         self.style = ttk.Style()
-        #self.configure(bg='gray27')
         self.style.configure('TButton', background='gray21')
         self.style.configure('TButton', foreground='white')
 
@@ -38,6 +28,7 @@ class VKeyboard(ttk.Frame):
     def press(self,  num):
         self.exp = self.exp + str(num)
         self.equation.set(self.exp)
+        self.parent.new_user.EntryName.insert(1, self.exp)
 
     def backspace(self):
         self.exp = self.exp[:-1]
@@ -429,5 +420,9 @@ class VKeyboard(ttk.Frame):
 
 if __name__ == '__main__':
     root = tk.Tk()
+    root.title('On Screen Keyboard')
+    root.geometry('1385x320')  # Window size
+    root.maxsize(width=1385, height=320)
+    root.minsize(width=1385, height=320)
     VKeyboard(root).pack()
     root.mainloop()
