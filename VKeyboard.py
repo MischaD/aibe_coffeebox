@@ -2,20 +2,21 @@ import tkinter as tk
 from tkinter import ttk
 
 
-class VKeyboard(tk.Toplevel):
+class VKeyboard(ttk.Frame):
     def __init__(self, parent):
-        super().__init__(parent)
+        ttk.Frame.__init__(self, parent)
+        #super().__init__(parent)
         # Don't show the 'Toplevel' at instantiation
 #        super().withdraw()
 
-        self.title('On Screen Keyboard')
+        #self.title('On Screen Keyboard')
 
-        self.geometry('1385x320')  # Window size
-        self.maxsize(width=1385, height=320)
-        self.minsize(width=1385, height=320)
+        #self.geometry('1385x320')  # Window size
+        #self.maxsize(width=1385, height=320)
+        #self.minsize(width=1385, height=320)
 
         self.style = ttk.Style()
-        self.configure(bg='gray27')
+        #self.configure(bg='gray27')
         self.style.configure('TButton', background='gray21')
         self.style.configure('TButton', foreground='white')
 
@@ -428,5 +429,5 @@ class VKeyboard(tk.Toplevel):
 
 if __name__ == '__main__':
     root = tk.Tk()
-    VKeyboard(root)
+    VKeyboard(root).pack()
     root.mainloop()

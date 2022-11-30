@@ -28,7 +28,10 @@ class PopupNewUser(tk.Toplevel):
                                    width=10)
         self.LabelName.pack(side=tk.LEFT)
         validate_func = self.register(self.validate_entry)
-        self.keyboard = self.open_keyboard()
+
+        self.keyboard_frame = ttk.Frame(self)
+        self.keyboard_frame.pack()
+        self.keyboard = self.open_keyboard(self.keyboard_frame)
 
         self.EntryName = ttk.Entry(self,
                                    textvariable=self.keyboard.equation,
@@ -38,8 +41,8 @@ class PopupNewUser(tk.Toplevel):
                                    width=20,
                                    cursor="boat",
                                    takefocus=False)
-
         self.EntryName.pack(side=tk.RIGHT)
+
 
     def is_invalid(self):
         # Todo: write invalid popup
@@ -54,8 +57,8 @@ class PopupNewUser(tk.Toplevel):
             return edit_text in '0123456789'
         return True
 
-    def open_keyboard(self):
-        return VKeyboard(self)
+    def open_keyboard(self, parent: tk.Misc):
+        return VKeyboard(parent)
 
 
 if __name__ == "__main__":
