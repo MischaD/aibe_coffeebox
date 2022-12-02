@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import tkinter as tk
 from tkinter import ttk
 from VKeyboard import VKeyboard
+from tkinter import messagebox
 
 
 @dataclass
@@ -24,14 +25,14 @@ class PopupNewUser(tk.Toplevel):
 
         self.new_user = WidgetNewUser(self)
         self.new_user.pack()
-        VKeyboard(self).pack()
+        VKeyboard(self, self.new_user.EntryName).pack()
 
 
 class WidgetNewUser(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
-        validate_func = self.register(self.validate_entry)
-        self.svar_name = tk.StringVar(value="Enter Name")
+        vcmd = (self.register(self.validate_entry), '%d', '%s', '%S')
+        self.svar_name = tk.StringVar()
 
         self.LabelName = ttk.Label(self,
                                    text='Name',
@@ -43,24 +44,20 @@ class WidgetNewUser(tk.Frame):
                                    textvariable=self.svar_name,
                                    invalidcommand=self.is_invalid,
                                    validate='all',
-                                   validatecommand=(validate_fusnc, '%d', '%s', '%S'),
+                                   validatecommand=vcmd,
                                    width=20,
-                                   cursor="boat",
                                    takefocus=False)
         self.EntryName.pack(side=tk.RIGHT)
 
     def validate_entry(self, reason, old_text, edit_text):
         if reason == '0':
-            print('Delete Text:', edit_text, 'from: ', old_text)
             return True
         if reason == '1':
-            print('Insert Text:', edit_text, 'to: ', old_text)
-            return edit_text in '0123456789'
+            return edit_text.isalpha() or edit_text.isspace()
         return True
 
     def is_invalid(self):
-        # Todo: write invalid popup
-        pass
+        messagebox.showerror("Error", "Only characters allowed!")
 
     def get(self):
         return self.EntryName.get()
