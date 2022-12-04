@@ -25,7 +25,7 @@ class PopupNewUser(tk.Toplevel):
 
         self.new_user = WidgetNewUser(self)
         self.new_user.pack()
-        VKeyboard(self, self.new_user.EntryName).pack()
+        VKeyboard(self, self.new_user.entry_name).pack()
 
 
 class WidgetNewUser(tk.Frame):
@@ -33,21 +33,37 @@ class WidgetNewUser(tk.Frame):
         tk.Frame.__init__(self, parent)
         vcmd = (self.register(self.validate_entry), '%d', '%s', '%S')
         self.svar_name = tk.StringVar()
+        self.ivar_credit = tk.IntVar()
 
-        self.LabelName = ttk.Label(self,
-                                   text='Name',
-                                   background='lightblue',
-                                   width=10)
-        self.LabelName.pack(side=tk.LEFT)
+        self.label_name = ttk.Label(self,
+                                    text='Name',
+                                    background='lightblue',
+                                    width=10)
+        self.label_name.grid(row=0, column=0)
 
-        self.EntryName = ttk.Entry(self,
-                                   textvariable=self.svar_name,
-                                   invalidcommand=self.is_invalid,
-                                   validate='all',
-                                   validatecommand=vcmd,
-                                   width=20,
-                                   takefocus=False)
-        self.EntryName.pack(side=tk.RIGHT)
+        self.entry_name = ttk.Entry(self,
+                                    textvariable=self.svar_name,
+                                    invalidcommand=self.is_invalid,
+                                    validate='all',
+                                    validatecommand=vcmd,
+                                    width=20,
+                                    takefocus=False)
+        self.entry_name.grid(row=0, column=1)
+
+        self.label_credit = ttk.Label(self,
+                                      text='Credit',
+                                      background='lightblue',
+                                      width=10)
+        self.label_credit.grid(row=1, column=0)
+
+        self.entry_credit = ttk.Entry(self,
+                                      textvariable=self.ivar_credit,
+                                      invalidcommand=self.is_invalid,
+                                      validate='all',
+                                      validatecommand=vcmd,
+                                      width=20,
+                                      takefocus=False)
+        self.entry_credit.grid(row=1, column=1)
 
     def validate_entry(self, reason, old_text, edit_text):
         if reason == '0':
@@ -60,7 +76,7 @@ class WidgetNewUser(tk.Frame):
         messagebox.showerror("Error", "Only characters allowed!")
 
     def get(self):
-        return self.EntryName.get()
+        return self.entry_name.get()
 
 
 if __name__ == "__main__":
