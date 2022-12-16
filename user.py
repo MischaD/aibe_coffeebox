@@ -165,7 +165,7 @@ class LabelInput(tk.Frame):
         self.variable = var
         self.label = ttk.Label(self, text=label, **label_args)
         self.label.grid(row=0, column=0, sticky=(tk.W + tk.E))
-        self.input = input_class(self, **input_args)
+        self.input = input_class(self, **input_args, style='info.TEntry')
         self.input.grid(row=0, column=1, sticky=(tk.W + tk.E))
 
 
@@ -183,7 +183,7 @@ class NewUserForm(tk.Frame):
 
         LabelInput(self, "Credit", self.dvar_credit,
                    input_class=ValidatedNumEntry,
-                   input_args={"width": 20, "background": 'lightblue'},
+                   input_args={"width": 20},
                    label_args={"background": 'lightblue', "width": 10},
                    ).grid(row=1, column=0)
 
