@@ -23,7 +23,6 @@ class User:
 class ValidatedMixin:
     """Adds a validation functionality to input"""
     def __init__(self, *args, error_var=None, **kwargs):
-        self.error = error_var or tk.StringVar()
         super().__init__(*args, **kwargs)
 
         vcmd = self.register(self._validate)
@@ -36,6 +35,7 @@ class ValidatedMixin:
         )
 
     def _toggle_error(self, on=False):
+        pass
         if on:
             self.configure(style='danger.TEntry')
         else:
@@ -45,7 +45,6 @@ class ValidatedMixin:
         """The validation method.
         Don't override this, override _key_validate, and _focus_validate
         """
-        self.error.set('')
         self._toggle_error()
 
         valid = True
@@ -64,9 +63,11 @@ class ValidatedMixin:
         return valid
 
     def _focusout_validate(self, **kwargs):
+        """Will be overwritten in actual widget"""
         return True
 
     def _key_validate(self, **kwargs):
+        """Will be overwritten in actual widget"""
         return True
 
     def _invalid(self, proposed, current, char, event, index, action):
@@ -130,7 +131,6 @@ class ValidatedNumEntry(ValidatedMixin, ttk.Entry):
         try:
             d_value = Decimal(value)
         except InvalidOperation:
-            messagebox.showerror("Error", f'Invalid number string: {value}, values required')
             return False
 
         return True
@@ -144,15 +144,14 @@ class ValidatedStringEntry(ValidatedMixin, ttk.Entry):
         if action == '0':  # This is a delete action
             return True
         if char.isalpha() or char.isspace():
-            messagebox.showerror("Error", "Only characters allowed!")
-            return False
+            return True
 
-        return True
+        messagebox.showerror("Error", "Only characters allowed!")
+        return False
 
     def _focusout_validate(self, event):
 
         if not self.get():
-            messagebox.showerror("Error", "A value is required!")
             return False
 
         return True
