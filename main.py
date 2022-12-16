@@ -5,7 +5,7 @@ from db_functions import *
 from VKeyboard import VKeyboard
 
 
-class CafeApp(tk.Tk):
+class App(tk.Tk):
     database = "database/kittybase.sqlite3"
     
     def __init__(self):
@@ -151,5 +151,5 @@ class PopupWindowItems(tk.Toplevel):
 
 
 if __name__ == "__main__":
-    app = CafeApp()
+    app = App()
     app.mainloop()
