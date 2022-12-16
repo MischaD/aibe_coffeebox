@@ -4,6 +4,7 @@ from tkinter import ttk
 from VKeyboard import VKeyboard
 from tkinter import messagebox
 from decimal import Decimal, InvalidOperation
+from ttkbootstrap import Style
 
 
 @dataclass
@@ -35,7 +36,10 @@ class ValidatedMixin:
         )
 
     def _toggle_error(self, on=False):
-        self.configure(style='info.TEntry')
+        if on:
+            self.configure(style='danger.TEntry')
+        else:
+            self.configure(style='primary.TEntry')
 
     def _validate(self, proposed, current, char, event, index, action):
         """The validation method.
@@ -177,25 +181,27 @@ class NewUserForm(tk.Frame):
 
         LabelInput(self, "Name", self.svar_name,
                    input_class=ValidatedStringEntry,
-                   input_args={"width": 20},
-                   label_args={"background": 'lightblue', "width": 10},
+                   input_args={"width": 20, "style": 'primary.TEntry'},
+                   label_args={"width": 10, "style": 'primary.Inverse.TLabel'},
                    ).grid(row=0, column=0)
 
         LabelInput(self, "Credit", self.dvar_credit,
                    input_class=ValidatedNumEntry,
-                   input_args={"width": 20},
-                   label_args={"background": 'lightblue', "width": 10},
+                   input_args={"width": 20, "style": 'primary.TEntry'},
+                   label_args={"width": 10, "style": 'primary.Inverse.TLabel'},
                    ).grid(row=1, column=0)
 
         buttons = tk.Frame(self)
         buttons.grid(sticky=tk.W + tk.E, row=2)
-        self.savebutton = ttk.Button(buttons, text="Save", style='success.TButton', command=self._on_save)
+        self.savebutton = ttk.Button(buttons, text="Save",
+                                     style='success.TButton',
+                                     command=self._on_save)
         self.savebutton.pack(side=tk.RIGHT)
-        self.closebutton = ttk.Button(buttons, text="Close", command=self.master.destroy)
+        self.closebutton = ttk.Button(buttons, text="Close",
+                                      style='danger.TButton',
+                                      command=self.master.destroy)
         self.closebutton.pack(side=tk.RIGHT)
 
-        self.blabla = ttk.Entry(buttons, style='info.TEntry')
-        self.blabla.pack()
 
     def _on_save(self):
         pass
@@ -215,6 +221,7 @@ class PopupNewUser(tk.Toplevel):
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
+    style = Style()
+    root = style.master
     PopupNewUser(root)
     root.mainloop()
