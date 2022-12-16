@@ -35,8 +35,9 @@ class ValidatedMixin:
         )
 
     def _toggle_error(self, on=False):
-        self.configure(background=('red' if on else 'black'))
-        self.configure(background='red')
+        s = ttk.Style()
+        s.configure('TEntry', background=('red' if on else 'black'))
+        self.configure(style='TEntry')
 
     def _validate(self, proposed, current, char, event, index, action):
         """The validation method.
