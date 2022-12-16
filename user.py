@@ -4,7 +4,6 @@ from tkinter import ttk
 from VKeyboard import VKeyboard
 from tkinter import messagebox
 from decimal import Decimal, InvalidOperation
-from ttkbootstrap import Style
 
 
 @dataclass
