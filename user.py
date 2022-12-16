@@ -22,7 +22,7 @@ class User:
 
 class ValidatedMixin:
     """Adds a validation functionality to input"""
-    def __init__(self, *args, error_var=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         vcmd = self.register(self._validate)
@@ -35,7 +35,6 @@ class ValidatedMixin:
         )
 
     def _toggle_error(self, on=False):
-        pass
         if on:
             self.configure(style='danger.TEntry')
         else:
@@ -46,7 +45,6 @@ class ValidatedMixin:
         Don't override this, override _key_validate, and _focus_validate
         """
         self._toggle_error()
-
         valid = True
 
         if event == 'focusout':
@@ -60,6 +58,9 @@ class ValidatedMixin:
                 index=index,
                 action=action
             )
+        elif event == 'focusin':
+            self.master.master.keyboard.change_target(self)
+
         return valid
 
     def _focusout_validate(self, **kwargs):
@@ -157,26 +158,25 @@ class ValidatedStringEntry(ValidatedMixin, ttk.Entry):
         return True
 
 
-class LabelInput(tk.Frame):
+class LabelInput(ttk.Frame):
     """A Widget containing label and input."""
     def __init__(self, parent, label, var, input_class=ttk.Entry,
-                 input_args=None, label_args=None):
-        super().__init__(parent)
+                 input_args=None, label_args=None, **kwargs):
+        super().__init__(parent, **kwargs)
 
         input_args = input_args or {}
         label_args = label_args or {}
-        self.variable = var
         self.label = ttk.Label(self, text=label, **label_args)
         self.label.grid(row=0, column=0, sticky=(tk.W + tk.E))
-        self.input = input_class(self, **input_args)
+        self.input = input_class(self, textvariable=var, **input_args)
         self.input.grid(row=0, column=1, sticky=(tk.W + tk.E))
 
 
-class NewUserForm(tk.Frame):
+class NewUserForm(ttk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.svar_name = tk.StringVar()
-        self.dvar_credit = tk.DoubleVar()
+        self.svar_credit = tk.StringVar()
 
         LabelInput(self, "Name", self.svar_name,
                    input_class=ValidatedStringEntry,
@@ -184,11 +184,11 @@ class NewUserForm(tk.Frame):
                    label_args={"width": 10, "style": 'primary.Inverse.TLabel'},
                    ).grid(row=0, column=0)
 
-        LabelInput(self, "Credit", self.dvar_credit,
+        LabelInput(self, "Credit", self.svar_credit,
                    input_class=ValidatedNumEntry,
                    input_args={"width": 20, "style": 'primary.TEntry'},
                    label_args={"width": 10, "style": 'primary.Inverse.TLabel'},
-                   ).grid(row=1, column=0)
+                   ).grid(row=1, column=0, sticky=tk.N+tk.E+tk.S+tk.W)
 
         buttons = tk.Frame(self)
         buttons.grid(sticky=tk.W + tk.E, row=2)
@@ -201,9 +201,19 @@ class NewUserForm(tk.Frame):
                                       command=self.master.destroy)
         self.closebutton.pack(side=tk.RIGHT)
 
+        self.keyboard = VKeyboard(self)
+        self.keyboard.grid(row=3)
 
     def _on_save(self):
-        pass
+        if not self.svar_name.get():
+            messagebox.showerror("Error", "Name needed!")
+            return
+        value = self.svar_credit.get()
+        try:
+            d_value = Decimal(value)
+        except InvalidOperation:
+            messagebox.showerror("Error", "Credit needed!")
+            return
 
     def get(self):
         pass
@@ -211,12 +221,11 @@ class NewUserForm(tk.Frame):
 
 
 class PopupNewUser(tk.Toplevel):
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.title('New User Data')
 
         NewUserForm(self).pack()
-        #VKeyboard(self, self.new_user.entry_name).pack()
 
 
 if __name__ == "__main__":

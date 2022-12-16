@@ -3,10 +3,9 @@ from tkinter import ttk
 
 
 class VKeyboard(ttk.Frame):
-    def __init__(self, parent, target: ttk.Entry):
-        ttk.Frame.__init__(self, parent)
-        self.parent = parent
-        self.target = target
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent, **kwargs)
+
         self.style = ttk.Style()
         self.style.configure('TButton', background='gray21')
         self.style.configure('TButton', foreground='white')
@@ -24,7 +23,8 @@ class VKeyboard(ttk.Frame):
 
         self.display()
 
-# Necessary functions
+    def change_target(self, target: ttk.Entry = None):
+        self.target = target
 
     def press(self,  num):
         self.exp = self.exp + str(num)
