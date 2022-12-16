@@ -4,6 +4,7 @@ from tkinter import ttk
 from VKeyboard import VKeyboard
 from tkinter import messagebox
 from decimal import Decimal, InvalidOperation
+from ttkbootstrap import Style
 
 
 @dataclass
@@ -189,7 +190,7 @@ class NewUserForm(tk.Frame):
 
         buttons = tk.Frame(self)
         buttons.grid(sticky=tk.W + tk.E, row=2)
-        self.savebutton = ttk.Button(buttons, text="Save", command=self._on_save)
+        self.savebutton = ttk.Button(buttons, text="Save", style='success.TButton', command=self._on_save)
         self.savebutton.pack(side=tk.RIGHT)
         self.closebutton = ttk.Button(buttons, text="Close", command=self.master.destroy)
         self.closebutton.pack(side=tk.RIGHT)
