@@ -36,6 +36,7 @@ class ValidatedMixin:
 
     def _toggle_error(self, on=False):
         self.configure(background=('red' if on else 'black'))
+        self.configure(background='red')
 
     def _validate(self, proposed, current, char, event, index, action):
         """The validation method.
@@ -85,12 +86,6 @@ class ValidatedMixin:
     def _key_invalid(self, **kwargs):
         """Handle invalid data on a key event. By default, we want to do nothing"""
         pass
-
-    def trigger_focusout_validation(self):
-        valid = self._validate('', '', '', 'focusout', '', '')
-        if not valid:
-            self._focusout_invalid(event='focusout')
-        return valid
 
 
 class ValidatedNumEntry(ValidatedMixin, ttk.Entry):
