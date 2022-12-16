@@ -165,7 +165,7 @@ class LabelInput(tk.Frame):
         self.variable = var
         self.label = ttk.Label(self, text=label, **label_args)
         self.label.grid(row=0, column=0, sticky=(tk.W + tk.E))
-        self.input = input_class(self, **input_args, style='info.TEntry')
+        self.input = input_class(self, **input_args)
         self.input.grid(row=0, column=1, sticky=(tk.W + tk.E))
 
 
@@ -193,6 +193,9 @@ class NewUserForm(tk.Frame):
         self.savebutton.pack(side=tk.RIGHT)
         self.closebutton = ttk.Button(buttons, text="Close", command=self.master.destroy)
         self.closebutton.pack(side=tk.RIGHT)
+
+        self.blabla = ttk.Entry(buttons, style='info.TEntry')
+        self.blabla.pack()
 
     def _on_save(self):
         pass
