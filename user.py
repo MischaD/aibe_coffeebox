@@ -183,7 +183,7 @@ class NewUserForm(tk.Frame):
 
         LabelInput(self, "Credit", self.dvar_credit,
                    input_class=ValidatedNumEntry,
-                   input_args={"width": 20, "style": 'info.TEntry'},
+                   input_args={"width": 20, "background": 'lightblue'},
                    label_args={"background": 'lightblue', "width": 10},
                    ).grid(row=1, column=0)
 
