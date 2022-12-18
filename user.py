@@ -181,25 +181,39 @@ class NewUserForm(ttk.Frame):
         LabelInput(self, "Name", self.svar_name,
                    input_class=ValidatedStringEntry,
                    input_args={"width": 20, "style": 'primary.TEntry'},
-                   label_args={"width": 10, "style": 'primary.Inverse.TLabel'},
+                   label_args={"width": 10, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
                    ).grid(row=0, column=0)
 
         LabelInput(self, "Credit", self.svar_credit,
                    input_class=ValidatedNumEntry,
                    input_args={"width": 20, "style": 'primary.TEntry'},
-                   label_args={"width": 10, "style": 'primary.Inverse.TLabel'},
+                   label_args={"width": 10, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
                    ).grid(row=1, column=0, sticky=tk.N+tk.E+tk.S+tk.W)
 
         buttons = tk.Frame(self)
-        buttons.grid(sticky=tk.W + tk.E, row=2)
+        buttons.grid(row=2)
+
         self.savebutton = ttk.Button(buttons, text="Save",
                                      style='success.TButton',
                                      command=self._on_save)
-        self.savebutton.pack(side=tk.RIGHT)
+        self.savebutton.grid(row=0, column=0,
+                             sticky=tk.W + tk.E,
+                             rowspan=2,
+                             padx=2,
+                             pady=2,
+                             ipadx=150,
+                             ipady=10)
+
         self.closebutton = ttk.Button(buttons, text="Close",
                                       style='danger.TButton',
                                       command=self.master.destroy)
-        self.closebutton.pack(side=tk.RIGHT)
+        self.closebutton.grid(row=0, column=1,
+                              sticky=tk.W + tk.E,
+                              rowspan=2,
+                              padx=2,
+                              pady=2,
+                              ipadx=150,
+                              ipady=10)
 
         self.keyboard = VKeyboard(self)
         self.keyboard.grid(row=3)
@@ -217,7 +231,6 @@ class NewUserForm(ttk.Frame):
 
     def get(self):
         pass
-        return self.entry_name.get()
 
 
 class PopupNewUser(tk.Toplevel):
@@ -226,6 +239,13 @@ class PopupNewUser(tk.Toplevel):
         self.title('New User Data')
 
         NewUserForm(self).pack()
+
+        self.style = Style()
+        self.style.configure('TButton', font=('Helvetica', 24))
+        self.style.configure('TLabel', font=('Helvetica', 24))
+        self.style.map('TButton', foreground=[
+            ('disabled', 'white'),
+            ('active', 'yellow')])
 
 
 if __name__ == "__main__":
