@@ -313,8 +313,8 @@ if __name__ == '__main__':
     style = Style()
     root = style.master
     root.title('On Screen Keyboard')
-    root.geometry('1385x320')  # Window size
-    root.maxsize(width=1385, height=320)
-    root.minsize(width=1385, height=320)
+    root.geometry('800x480')  # Window size
+    root.maxsize(width=800, height=480)
+    root.minsize(width=800, height=480)
     VKeyboard(root).pack()
     root.mainloop()
