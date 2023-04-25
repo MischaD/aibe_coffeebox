@@ -1,5 +1,6 @@
 import sqlite3
 from sqlite3 import Error
+from user import User
 
 
 def create_connection(db_file):
@@ -24,7 +25,6 @@ def get_products_list(db_conn):
     row1 = [item[0] for item in products_list]
     row2 = [item[1] for item in products_list]
     items_price_dict = dict(zip(row1, row2))
-
     return items_price_dict
 
 
@@ -32,7 +32,6 @@ def get_users(db_conn):
     cur = db_conn.cursor()
     cur.execute("SELECT * FROM statistics")
     users = cur.fetchall()
-    
     return users
 
 
@@ -41,24 +40,18 @@ def get_product_price(db_conn):
     cur = db_conn.cursor()
     cur.execute("SELECT price FROM products WHERE name=?", (product,))
 
-    price = cur.fetchone()
-    print("asdf", price[0])
 
-
-def add_user(db_conn):
-    username = "Michael"
+def add_user(db_conn, user=User):
     cur = db_conn.cursor()
-    cur.execute("INSERT INTO statistics (user) VALUES(?)", (username,))
-
+    cur.execute("INSERT INTO statistics (user, balance) VALUES(?, ?)", (user.username, user.balance))
     db_conn.commit()
 
 
-def update_user_debt(db_conn, user):
+def update_user_debt(db_conn, user=User):
     cur = db_conn.cursor()
     cur.execute("UPDATE statistics SET balance=? WHERE id=(?)", (user.balance, user.id))
     cur.execute("UPDATE statistics SET consumed=? WHERE id=(?)", (user.consumed, user.id))
-
-#    conn.commit()
+    db_conn.commit()
 
 
 if __name__ == '__main__':

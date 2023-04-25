@@ -1,3 +1,4 @@
+import tkinter
 from dataclasses import dataclass
 import tkinter as tk
 from tkinter import ttk
@@ -9,15 +10,18 @@ from ttkbootstrap import Style
 
 @dataclass
 class User:
-    id: int
+    id: int = 0
     username: str = ''
     balance: float = 0.0
     consumed: float = 0.0
     paid: float = 0.0
 
     def calculate_debt(self, item_price):
-        self.balance = self.balance - item_price
-        self.consumed = self.consumed + item_price
+        self.balance = round(self.balance - item_price, 2)
+        self.consumed = round(self.consumed + item_price, 2)
+
+    def pay_debt(self, amount):
+        self.balance = round(self.balance + amount, 2)
 
 
 class ValidatedMixin:
@@ -108,7 +112,7 @@ class ValidatedNumEntry(ValidatedMixin, ttk.Entry):
             (char == '-' and index != '0'),
             (char == '.' and '.' in current)
         ]):
-            messagebox.showerror("Error", "Only numbers allowed!")
+            Error("Only numbers allowed!")
             return False
 
         # At this point, proposed is either '-', '.', '-.',
@@ -147,7 +151,7 @@ class ValidatedStringEntry(ValidatedMixin, ttk.Entry):
         if char.isalpha() or char.isspace():
             return True
 
-        messagebox.showerror("Error", "Only characters allowed!")
+        Error("Only characters allowed!")
         return False
 
     def _focusout_validate(self, event):
@@ -156,6 +160,17 @@ class ValidatedStringEntry(ValidatedMixin, ttk.Entry):
             return False
 
         return True
+
+
+class Error(tk.Toplevel):
+    def __init__(self, message):
+        tk.Toplevel.__init__(self)
+        self.title('Error')
+        self.attributes('-topmost', 'true')
+        ttk.Label(self, text=message, font='Helvetica 24', style='danger.TLabel').grid(row=0, column=0)
+        ttk.Button(self,style='warning.TButton', command=self.destroy, text="OK").grid(row=1, column=0)
+        self.lift()
+        self.grab_set()
 
 
 class LabelInput(ttk.Frame):
@@ -176,76 +191,162 @@ class NewUserForm(ttk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.svar_name = tk.StringVar()
-        self.svar_credit = tk.StringVar()
+        self.svar_balance = tk.StringVar()
+
+        window_height = super().winfo_screenheight()
+        window_width = super().winfo_screenwidth()
+        input_width = int(window_width/40)
+        label_width = int(window_width/60)
+        button_width = int(window_width/5)
 
         LabelInput(self, "Name", self.svar_name,
                    input_class=ValidatedStringEntry,
-                   input_args={"width": 20, "style": 'primary.TEntry'},
-                   label_args={"width": 10, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
-                   ).grid(row=0, column=0)
+                   input_args={"width": input_width, "style": 'primary.TEntry', "font": 'Helvetica 18'},
+                   label_args={"width": label_width, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
+                   ).grid(row=0, column=0, sticky=tk.N)
 
-        LabelInput(self, "Credit", self.svar_credit,
+        LabelInput(self, "Credit", self.svar_balance,
                    input_class=ValidatedNumEntry,
-                   input_args={"width": 20, "style": 'primary.TEntry'},
-                   label_args={"width": 10, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
-                   ).grid(row=1, column=0, sticky=tk.N+tk.E+tk.S+tk.W)
+                   input_args={"width": input_width, "style": 'primary.TEntry', "font": 'Helvetica 18'},
+                   label_args={"width": label_width, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
+                   ).grid(row=1, column=0, sticky=tk.N)
+
+        self.keyboard = VKeyboard(self)
+        self.keyboard.grid(row=2)
 
         buttons = tk.Frame(self)
-        buttons.grid(row=2)
+        buttons.grid(row=3)
 
-        self.savebutton = ttk.Button(buttons, text="Save",
-                                     style='success.TButton',
-                                     command=self._on_save)
-        self.savebutton.grid(row=0, column=0,
-                             sticky=tk.W + tk.E,
-                             rowspan=2,
-                             padx=2,
-                             pady=2,
-                             ipadx=150,
-                             ipady=10)
-
-        self.closebutton = ttk.Button(buttons, text="Close",
-                                      style='danger.TButton',
-                                      command=self.master.destroy)
-        self.closebutton.grid(row=0, column=1,
+        self.save_button = ttk.Button(buttons,
+                                      text="Save",
+                                      style='success.TButton',
+                                      command=self._on_save)
+        self.save_button.grid(row=0,
+                              column=0,
                               sticky=tk.W + tk.E,
                               rowspan=2,
                               padx=2,
                               pady=2,
-                              ipadx=150,
+                              ipadx=button_width,
                               ipady=10)
 
-        self.keyboard = VKeyboard(self)
-        self.keyboard.grid(row=3)
+        self.close_button = ttk.Button(buttons,
+                                       text="Close",
+                                       style='danger.TButton',
+                                       command=self.master.destroy)
+        self.close_button.grid(row=0,
+                               column=1,
+                               sticky=tk.W + tk.E,
+                               rowspan=2,
+                               padx=2,
+                               pady=2,
+                               ipadx=button_width,
+                               ipady=10)
+
+    def get_user(self):
+        self.wait_window()
+        return
 
     def _on_save(self):
         if not self.svar_name.get():
             messagebox.showerror("Error", "Name needed!")
             return
-        value = self.svar_credit.get()
+        value = self.svar_balance.get()
         try:
             d_value = Decimal(value)
         except InvalidOperation:
             messagebox.showerror("Error", "Credit needed!")
             return
-
-    def get(self):
-        pass
+        self.master.balance = float(self.svar_balance.get())
+        self.master.name = self.svar_name.get()
+        self.master.destroy()
 
 
 class PopupNewUser(tk.Toplevel):
+    name = ""
+    balance = 0
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title('New User Data')
 
         NewUserForm(self).pack()
-
+        self.attributes("-fullscreen", True)
         self.style = Style()
-        self.style.configure('TButton', font=('Helvetica', 24))
-        self.style.configure('TLabel', font=('Helvetica', 24))
+        self.style.configure('TButton', font=('Helvetica', 18))
+        self.style.configure('TLabel', font=('Helvetica', 30))
         self.style.map('TButton', foreground=[
             ('disabled', 'white'),
             ('active', 'yellow')])
+
+    def get_user(self):
+        self.wait_window()
+        return self.name, self.balance
+
+
+class PopupPay(tk.Toplevel):
+    value = 0
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.title('Pay')
+        self.attributes("-fullscreen", True)
+        self.svar_amount = tk.StringVar()
+
+        window_width = super().winfo_screenwidth()
+        input_width = int(window_width / 40)
+        label_width = int(window_width / 60)
+        button_width = int(window_width / 5)
+
+        LabelInput(self, "Credit", self.svar_amount,
+                   input_class=ValidatedNumEntry,
+                   input_args={"width": input_width, "style": 'primary.TEntry', "font": 'Helvetica 18'},
+                   label_args={"width": label_width, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
+                   ).grid(row=1, column=0, sticky=tk.N)
+        self.keyboard = VKeyboard(self)
+        self.keyboard.grid(row=2)
+
+        buttons = tk.Frame(self)
+        buttons.grid(row=3)
+
+        self.save_button = ttk.Button(buttons,
+                                      text="Save",
+                                      style='success.TButton',
+                                      command=self._on_save)
+        self.save_button.grid(row=0,
+                              column=0,
+                              sticky=tk.W + tk.E,
+                              rowspan=2,
+                              padx=2,
+                              pady=2,
+                              ipadx=button_width,
+                              ipady=10)
+
+        self.close_button = ttk.Button(buttons,
+                                       text="Close",
+                                       style='danger.TButton',
+                                       command=self.master.destroy)
+        self.close_button.grid(row=0,
+                               column=1,
+                               sticky=tk.W + tk.E,
+                               rowspan=2,
+                               padx=2,
+                               pady=2,
+                               ipadx=button_width,
+                               ipady=10)
+
+    def get_value(self):
+        self.wait_window()
+        return self.value
+
+    def _on_save(self):
+        self.value = float(self.svar_amount.get())
+        try:
+            d_value = Decimal(self.value)
+        except InvalidOperation:
+            messagebox.showerror("Error", "Enter valid amount!")
+            return
+        self.destroy()
 
 
 if __name__ == "__main__":
