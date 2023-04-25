@@ -1,5 +1,5 @@
 # kitty
-A GUI app in python to manage the kitty for coffee with a Raspberry Pi.
+A GUI app in python to manage the cash for coffee with a Raspberry Pi.
 
 ## Annotations
 - Readme under construction
