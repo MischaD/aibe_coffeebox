@@ -1,30 +1,19 @@
 # kitty
-A GUI app in python to manage the kitty for coffee with a Raspberry Pi.
+A GUI app in python to manage the cash for coffee with a Raspberry Pi.
 
-# Table of Contents
-1. [Flow Chart](#flow-chart)
-2. [Class Diagram](#class-diagram)
-3. [Third Example](#third-example)
+## Annotations
+- Readme under construction
+- Raspberry pi 2b model was used
+- Python 3.9 was used for the program
+- Ensure installation of tk bootstrap for extended gui visuals
 
-## Flow Chart
+## Pictures
 
-## Class Diagram
+![Image1](img/Screenshot_25_04_2023_16_21_15.png)
 
-```mermaid
-classDiagram
-    class Tk
-    class CafeApp{
-        String database
-        __init__(self)
-        create_tree(self, parent) tree
-        user_selected(self, event)
-        popup_window(self)
-    }
-    class PopupWindow{
-        __init__(self,parent)
-        get_selected_item_price(self, item)
-        get_price(self)
-    }
+![Image2](img/Screenshot_25_04_2023_16_21_28.png)
 
-    Tk <|-- CafeApp
-```
+![Image3](img/Screenshot_25_04_2023_16_21_41.png)
+
+
+
