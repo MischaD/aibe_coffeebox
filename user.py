@@ -249,13 +249,13 @@ class NewUserForm(ttk.Frame):
 
     def _on_save(self):
         if not self.svar_name.get():
-            messagebox.showerror("Error", "Name needed!")
+            messagebox.showerror("Error", "Name needed!", parent=self)
             return
         value = self.svar_balance.get()
         try:
             d_value = Decimal(value)
         except InvalidOperation:
-            messagebox.showerror("Error", "Credit needed!")
+            messagebox.showerror("Error", "Credit needed!", parent=self)
             return
         self.master.balance = float(self.svar_balance.get())
         self.master.name = self.svar_name.get()
