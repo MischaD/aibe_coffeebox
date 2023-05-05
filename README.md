@@ -5,7 +5,7 @@ A GUI app in python to manage the cash for coffee with a Raspberry Pi.
 - [1. Annotations](#1-annotations)
 - [2. Pictures](#2-pictures)
 - [3. Install Python 3.9](#3-install-python-39)
-- [Hide cursor in Raspbian](#hide-cursor-in-raspbian)
+- [4. Hide cursor in Raspbian](#4-hide-cursor-in-raspbian)
 
 ## 1. Annotations
 
@@ -86,7 +86,7 @@ To install Python 3.9 on a Raspberry Pi running the Raspberry Pi OS, follow thes
 
 That's it! You now have Python 3.9 installed on your Raspberry Pi.
 
-## Hide cursor in Raspbian
+## 4. Hide cursor in Raspbian
 
 1. Open the terminal on your Raspberry Pi.
 2. Edit the lightdm.conf file using the following command:
