@@ -6,6 +6,7 @@ A GUI app in python to manage the cash for coffee with a Raspberry Pi.
 - [2. Pictures](#2-pictures)
 - [3. Install Python 3.9](#3-install-python-39)
 - [4. Hide cursor in Raspbian](#4-hide-cursor-in-raspbian)
+
 ## 1. Annotations
 
 - Readme under construction
