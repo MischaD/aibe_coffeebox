@@ -6,8 +6,9 @@ A GUI app in python to manage the cash for coffee with a Raspberry Pi.
 - [2. Pictures](#2-pictures)
 - [3. Install Python 3.9](#3-install-python-39)
 - [4. Hide cursor in Raspbian](#4-hide-cursor-in-raspbian)
-- [Download on your raspberry pi](#download-on-your-raspberry-pi)
-- [Automatically start the python app script on startup](#automatically-start-the-python-app-script-on-startup)
+- [5. Download on your raspberry pi](#5-download-on-your-raspberry-pi)
+- [6. Install ttkbootstrap](#6-install-ttkbootstrap)
+- [7. Automatically start the python app script on startup](#7-automatically-start-the-python-app-script-on-startup)
 
 ## 1. Annotations
 
@@ -110,7 +111,7 @@ That's it! You now have Python 3.9 installed on your Raspberry Pi.
     sudo reboot
     ```
 
-## Download on your raspberry pi
+## 5. Download on your raspberry pi
 
 1. Download the latest stable release:
 
@@ -124,7 +125,15 @@ That's it! You now have Python 3.9 installed on your Raspberry Pi.
     tar -xf V1.0.tar.gz
     ```
 
-## Automatically start the python app script on startup
+## 6. Install ttkbootstrap
+
+To install ttkbootstrap on a Raspberry Pi, you simply run:
+
+```bash
+sudo pip3.9 install ttkbootstrap
+```
+
+## 7. Automatically start the python app script on startup
 
 To automatically start a Python program on startup of a Raspberry Pi, you can use the rc.local file. Here are the steps:
 
