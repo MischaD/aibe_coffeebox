@@ -6,6 +6,8 @@ A GUI app in python to manage the cash for coffee with a Raspberry Pi.
 - [2. Pictures](#2-pictures)
 - [3. Install Python 3.9](#3-install-python-39)
 - [4. Hide cursor in Raspbian](#4-hide-cursor-in-raspbian)
+- [Download on your raspberry pi](#download-on-your-raspberry-pi)
+- [Automatically start the python app script on startup](#automatically-start-the-python-app-script-on-startup)
 
 ## 1. Annotations
 
@@ -107,3 +109,45 @@ That's it! You now have Python 3.9 installed on your Raspberry Pi.
     ```bash
     sudo reboot
     ```
+
+## Download on your raspberry pi
+
+1. Download the latest stable release:
+
+    ```bash
+    wget https://github.com/m31L3r/coffeebox/archive/refs/tags/V1.0.tar.gz
+    ```
+
+2. Unpack the downloaded file:
+
+    ```bash
+    tar -xf V1.0.tar.gz
+    ```
+
+## Automatically start the python app script on startup
+
+To automatically start a Python program on startup of a Raspberry Pi, you can use the rc.local file. Here are the steps:
+
+1. Open the terminal on your Raspberry Pi and type the following command to edit the rc.local file:
+
+    ```bash
+    sudo nano /etc/rc.local
+    ```
+
+2. In the rc.local file, add the following line before the exit 0 line:
+
+    ```bash
+    sudo python3.9 ~/path/to/your/python/coffeebox-1.0/main.py &
+    ```
+
+    Replace /path/to/your/python/program.py with the actual path to your Python program.
+
+3. Save the rc.local file.
+
+4. Reboot your Raspberry Pi to apply the changes:
+
+    ```bash
+    sudo reboot
+    ```
+
+After the reboot, your Python program should start automatically. Note that you need to use sudo to run your Python program as a superuser in order to avoid permission issues. Also, the & at the end of the command is used to run the Python program in the background, so that the startup process is not delayed by the Python program's execution.
