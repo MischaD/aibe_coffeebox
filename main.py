@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import os
 from user import *
 from db_functions import *
 from VKeyboard import VKeyboard
@@ -7,7 +8,9 @@ from ttkbootstrap import Style
 
 
 class App(tk.Tk):
-    database = "database/kittybase.sqlite3"
+    path_to_file = os.path.abspath(__file__)
+    dir_path = os.path.dirname(path_to_file)
+    database = dir_path+"/database/kittybase.sqlite3"
     
     def __init__(self):
         super().__init__()
@@ -26,7 +29,7 @@ class App(tk.Tk):
         # Head frame
         self.frame_header = ttk.Frame()
         self.frame_header.pack(pady=0)
-        self.logo = tk.PhotoImage(file='img/cafe_logo.png')
+        self.logo = tk.PhotoImage(file=self.dir_path'/img/cafe_logo.png')
         self.header_logo = ttk.Label(self.frame_header,
                                      image=self.logo)
         self.header_logo.grid(column=0, row=0)
