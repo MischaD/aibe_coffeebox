@@ -29,7 +29,7 @@ class App(tk.Tk):
         # Head frame
         self.frame_header = ttk.Frame()
         self.frame_header.pack(pady=0)
-        self.logo = tk.PhotoImage(file=self.dir_path'/img/cafe_logo.png')
+        self.logo = tk.PhotoImage(file=self.dir_path+'/img/cafe_logo.png')
         self.header_logo = ttk.Label(self.frame_header,
                                      image=self.logo)
         self.header_logo.grid(column=0, row=0)
