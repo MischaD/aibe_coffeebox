@@ -135,23 +135,22 @@ sudo pip3.9 install ttkbootstrap
 
 ## 7. Automatically start the python app script on startup
 
-To automatically start a Python program on startup of a Raspberry Pi, you can use the rc.local file. Here are the steps:
+You can use the /etc/xdg/autostart directory to autostart your Python script. This directory contains .desktop files that are used to automatically start applications when the desktop environment starts up.
 
-1. Open the terminal on your Raspberry Pi and type the following command to edit the rc.local file:
+1. Open a text editor and create a new file. Name the file something like `my_program.desktop`.
 
-    ```bash
-    sudo nano /etc/rc.local
-    ```
-
-2. In the rc.local file, add the following line before the exit 0 line:
+2. Add the following lines to the file:
 
     ```bash
-    sudo python3.9 ~/path/to/your/python/coffeebox-1.0/main.py &
+    [Desktop Entry]
+    Type=Application
+    Name=My Program
+    Exec=/usr/bin/python3 /path/to/your/python/program.py
     ```
 
-    Replace /path/to/your/python/program.py with the actual path to your Python program.
+    Replace `My Program` with the name of your program, `/usr/bin/python3` with the path to your Python interpreter, and `/path/to/your/python/program.py` with the actual path to your Python program.
 
-3. Save the rc.local file.
+3. Save the file in the `/etc/xdg/autostart` directory.
 
 4. Reboot your Raspberry Pi to apply the changes:
 
@@ -159,4 +158,4 @@ To automatically start a Python program on startup of a Raspberry Pi, you can us
     sudo reboot
     ```
 
-After the reboot, your Python program should start automatically. Note that you need to use sudo to run your Python program as a superuser in order to avoid permission issues. Also, the & at the end of the command is used to run the Python program in the background, so that the startup process is not delayed by the Python program's execution.
+Now your Python script should automatically start when the desktop environment starts up. Note that this method assumes that you're using a desktop environment that reads the `.desktop` files in the `/etc/xdg/autostart directory`, such as LXDE or Xfce. If you're using a different desktop environment or window manager, you may need to use a different method to autostart your program.
