@@ -66,6 +66,8 @@ class App(tk.Tk):
         font_size = 24
         style.configure('Treeview.Heading', font='None, 28')
         style.configure('Treeview', font=f'None, {font_size}', rowheight=int(font_size*1.6))
+        style.configure("Custom.Vertical.TScrollbar", arrowsize=60)
+
         tree = ttk.Treeview(parent, columns=columns, show='headings', height=6)
         tree.heading(columns[0], text='Name')
         tree.column(columns[0], anchor=tk.CENTER, stretch=tk.NO, width=350)
@@ -74,7 +76,7 @@ class App(tk.Tk):
         tree.bind('<<TreeviewSelect>>', self.user_selected)
         tree.grid(column=0, row=0, pady=20)
     
-        scrollbar = ttk.Scrollbar(parent, orient=tk.VERTICAL, arrowsize=60, command=tree.yview)
+        scrollbar = ttk.Scrollbar(parent, orient=tk.VERTICAL, style="Custom.Vertical.TScrollbar", command=tree.yview)
         tree.configure(yscroll=scrollbar.set)
         scrollbar.grid(row=0, column=1, sticky='ns')
 
