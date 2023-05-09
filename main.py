@@ -11,6 +11,9 @@ class App(tk.Tk):
     path_to_file = os.path.abspath(__file__)
     dir_path = os.path.dirname(path_to_file)
     database = dir_path+"/database/kittybase.sqlite3"
+
+    last_y = 0
+    is_scrolling = False
     
     def __init__(self):
         super().__init__()
@@ -42,7 +45,7 @@ class App(tk.Tk):
         self.frame_content.pack()
         self.frame_content.columnconfigure(0, weight=1)
         self.content_tree = self.create_tree(self.frame_content)
-        
+
         self.users = []
         db_conn = create_connection(self.database)
         with db_conn:
@@ -61,26 +64,36 @@ class App(tk.Tk):
         self.button_add.pack()
 
     def create_tree(self, parent):
+
         columns = ('name', 'balance')
         style = Style()
         font_size = 24
         style.configure('Treeview.Heading', font='None, 28')
         style.configure('Treeview', font=f'None, {font_size}', rowheight=int(font_size*1.6))
+
         tree = ttk.Treeview(parent, columns=columns, show='headings', height=6)
         tree.heading(columns[0], text='Name')
         tree.column(columns[0], anchor=tk.CENTER, stretch=tk.NO, width=350)
         tree.heading(columns[1], text='Balance')
         tree.column(columns[1], anchor=tk.CENTER, stretch=tk.NO, width=350)
-        tree.bind('<<TreeviewSelect>>', self.user_selected)
+        tree.bind('<B1-Motion>', self.scroll_treeview)
+        tree.bind('<ButtonRelease-1>', self.user_selected)
+
         tree.grid(column=0, row=0, pady=20)
-    
-        scrollbar = ttk.Scrollbar(parent, orient=tk.VERTICAL, command=tree.yview)
-        tree.configure(yscroll=scrollbar.set)
-        scrollbar.grid(row=0, column=1, sticky='ns')
 
         return tree
 
+    def scroll_treeview(self, event):
+        self.is_scrolling = True
+        delta_y = event.y_root - self.last_y
+        self.content_tree.yview_scroll(-1 * delta_y, "units")
+        self.last_y = event.y_root
+
     def user_selected(self, event):
+        if self.is_scrolling:
+            self.is_scrolling = False
+            return
+
         selected_item = self.content_tree.selection()
         user_idx = self.content_tree.index(selected_item[0])
 
