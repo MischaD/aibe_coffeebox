@@ -64,7 +64,7 @@ class App(tk.Tk):
         self.button_add.pack()
 
     def create_tree(self, parent):
-
+        
         columns = ('name', 'balance')
         style = Style()
         font_size = 24
