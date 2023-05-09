@@ -84,10 +84,11 @@ class App(tk.Tk):
         return tree
 
     def scroll_treeview(self, event):
-        self.is_scrolling = True
         delta_y = event.y_root - self.last_y
-        self.content_tree.yview_scroll(-1 * delta_y, "units")
-        self.last_y = event.y_root
+        if delta_y > 10:
+            self.is_scrolling = True
+            self.content_tree.yview_scroll(-1 * int(delta_y/10), "units")
+            self.last_y = event.y_root
 
     def user_selected(self, event):
         if self.is_scrolling:
