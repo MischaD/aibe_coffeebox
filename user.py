@@ -17,8 +17,14 @@ class User:
     paid: float = 0.0
 
     def calculate_debt(self, item_price):
-        self.balance = round(self.balance - item_price, 2)
-        self.consumed = round(self.consumed + item_price, 2)
+        scaling_factor = 1
+        if self.balance > 25.0:
+            scaling_factor = 1.5
+        elif self.balance > 50.0:
+            scaling_factor = 2
+
+        self.balance = round(self.balance - item_price*scaling_factor, 2)
+        self.consumed = round(self.consumed + item_price*scaling_factor, 2)
 
     def pay_debt(self, amount):
         self.balance = round(self.balance + amount, 2)
