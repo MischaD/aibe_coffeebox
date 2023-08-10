@@ -146,26 +146,26 @@ class PopupWindowItems(tk.Toplevel):
         self.attributes("-fullscreen", True)
         #  Configure button style
         self.style = Style()
-        self.style.configure('TButton', font=('Helvetica', 18))
-        self.style.configure('TLabel', font=('Helvetica', 30))
+        self.style.configure('TButton', font=('Helvetica', 24))
+        # self.style.configure('TLabel', font=('Helvetica', 30))
 
         self.button_item = []
         for item, price in self.products_dict.items():
             display_string = f"{item:<18}\t\t{price} €"
             self.button_item = ttk.Button(self, text=display_string, command=lambda m=price: self.get_selected_price(m))
-            self.button_item.pack(fill='x')
+            self.button_item.pack(fill='x', ipady=6)
 
         self.button_pay = ttk.Button(self,
                                      text="Pay Debt!!",
                                      style='info.TButton',
                                      command=self.open_pay_popup)
-        self.button_pay.pack(fill='x')
+        self.button_pay.pack(fill='x', ipady=6)
 
         self.button_close = ttk.Button(self,
                                        text="Close",
                                        style='danger.TButton',
                                        command=self.destroy)
-        self.button_close.pack(fill='x')
+        self.button_close.pack(fill='x', ipady=6)
 
     def open_pay_popup(self):
         self.value = PopupPay(self).get_value()
