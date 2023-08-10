@@ -138,6 +138,7 @@ class PopupWindowItems(tk.Toplevel):
 
         self.products_dict = parent.items_price_dict
         products = self.products_dict.keys()
+        prices = self.products_dict.items()
 
         label = ttk.Label(self, text="Select Product:")
         label.pack(fill='x', padx=150, pady=5)
@@ -151,8 +152,9 @@ class PopupWindowItems(tk.Toplevel):
         self.style.configure('TLabel', font=('Helvetica', 30))
 
         self.button_item = []
-        for item in products:
-            self.button_item = ttk.Button(self, text=item, command=lambda m=item: self.get_selected_item_price(m))
+        for item, price in self.products_dict.items():
+            display_string = f"{item:<18}\t\t{price} €"
+            self.button_item = ttk.Button(self, text=display_string, command=lambda m=price: self.get_selected_price(m))
             self.button_item.pack(fill='x')
 
         self.button_pay = ttk.Button(self,
@@ -172,8 +174,8 @@ class PopupWindowItems(tk.Toplevel):
         self.payment = True
         self.destroy()
 
-    def get_selected_item_price(self, item):
-        self.value = self.products_dict[item]
+    def get_selected_price(self, price):
+        self.value = price
         self.destroy()
 
     def get_price(self):
