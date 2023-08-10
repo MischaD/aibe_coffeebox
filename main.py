@@ -147,7 +147,6 @@ class PopupWindowItems(tk.Toplevel):
         #  Configure button style
         self.style = Style()
         self.style.configure('TButton', font=('Helvetica', 24))
-        # self.style.configure('TLabel', font=('Helvetica', 30))
 
         self.button_item = []
         for item, price in self.products_dict.items():
