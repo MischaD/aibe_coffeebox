@@ -137,15 +137,11 @@ class PopupWindowItems(tk.Toplevel):
         self.title("Select")
 
         self.products_dict = parent.items_price_dict
-        products = self.products_dict.keys()
-        prices = self.products_dict.items()
 
         label = ttk.Label(self, text="Select Product:")
         label.pack(fill='x', padx=150, pady=5)
-
         # Configure window appearance
         self.attributes("-fullscreen", True)
-
         #  Configure button style
         self.style = Style()
         self.style.configure('TButton', font=('Helvetica', 18))
