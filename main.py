@@ -89,6 +89,8 @@ class App(tk.Tk):
         amount, payment = self.call_items_popup()
         if payment:
             self.users[user_idx].pay_debt(amount)
+        elif amount == 0:
+            pass
         else:
             self.users[user_idx].calculate_debt(amount)
 
