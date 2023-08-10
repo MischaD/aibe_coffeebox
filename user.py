@@ -17,8 +17,16 @@ class User:
     paid: float = 0.0
 
     def calculate_debt(self, item_price):
-        self.balance = round(self.balance - item_price, 2)
-        self.consumed = round(self.consumed + item_price, 2)
+        scaling_factor = 1
+        if self.balance < -50.0:
+            messagebox.showinfo("Warning", "Debt higher than 50€!\n You will be charged 100% more!")
+            scaling_factor = 2
+        elif self.balance < -25.0:
+            messagebox.showinfo("Warning", "Debt higher than 25€! You will be charged 50% more!")
+            scaling_factor = 1.5
+
+        self.balance = round(self.balance - item_price*scaling_factor, 2)
+        self.consumed = round(self.consumed + item_price*scaling_factor, 2)
 
     def pay_debt(self, amount):
         self.balance = round(self.balance + amount, 2)

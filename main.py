@@ -89,6 +89,8 @@ class App(tk.Tk):
         amount, payment = self.call_items_popup()
         if payment:
             self.users[user_idx].pay_debt(amount)
+        elif amount == 0:
+            pass
         else:
             self.users[user_idx].calculate_debt(amount)
 
@@ -137,43 +139,40 @@ class PopupWindowItems(tk.Toplevel):
         self.title("Select")
 
         self.products_dict = parent.items_price_dict
-        products = self.products_dict.keys()
 
         label = ttk.Label(self, text="Select Product:")
         label.pack(fill='x', padx=150, pady=5)
-
         # Configure window appearance
         self.attributes("-fullscreen", True)
-
         #  Configure button style
         self.style = Style()
-        self.style.configure('TButton', font=('Helvetica', 18))
-        self.style.configure('TLabel', font=('Helvetica', 30))
+        self.style.configure('TButton', font=('Helvetica', 24))
 
         self.button_item = []
-        for item in products:
-            self.button_item = ttk.Button(self, text=item, command=lambda m=item: self.get_selected_item_price(m))
-            self.button_item.pack(fill='x')
+        for item, price in self.products_dict.items():
+            display_string = f"{item:<18}\t\t{price} €"
+            self.button_item = ttk.Button(self, text=display_string, command=lambda m=price: self.get_selected_price(m))
+            self.button_item.pack(fill='x', ipady=6)
 
         self.button_pay = ttk.Button(self,
                                      text="Pay Debt!!",
                                      style='info.TButton',
                                      command=self.open_pay_popup)
-        self.button_pay.pack(fill='x')
+        self.button_pay.pack(fill='x', ipady=6)
 
         self.button_close = ttk.Button(self,
                                        text="Close",
                                        style='danger.TButton',
                                        command=self.destroy)
-        self.button_close.pack(fill='x')
+        self.button_close.pack(fill='x', ipady=6)
 
     def open_pay_popup(self):
         self.value = PopupPay(self).get_value()
         self.payment = True
         self.destroy()
 
-    def get_selected_item_price(self, item):
-        self.value = self.products_dict[item]
+    def get_selected_price(self, price):
+        self.value = price
         self.destroy()
 
     def get_price(self):
