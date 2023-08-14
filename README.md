@@ -116,13 +116,13 @@ That's it! You now have Python 3.9 installed on your Raspberry Pi.
 1. Download the latest stable release:
 
     ```bash
-    wget https://github.com/m31L3r/coffeebox/archive/refs/tags/V1.0.tar.gz
+    wget https://github.com/m31L3r/coffeebox/archive/refs/tags/V1.2.tar.gz
     ```
 
 2. Unpack the downloaded file:
 
     ```bash
-    tar -xf V1.0.tar.gz
+    tar -xf V1.2.tar.gz
     ```
 
 ## 6. Install ttkbootstrap
