@@ -30,7 +30,7 @@ def get_products_list(db_conn):
 
 def get_users(db_conn):
     cur = db_conn.cursor()
-    cur.execute("SELECT * FROM statistics")
+    cur.execute("SELECT * FROM statistics ORDER BY user ASC")
     users = cur.fetchall()
     return users
 
