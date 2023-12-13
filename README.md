@@ -122,7 +122,7 @@ That's it! You now have Python 3.9 installed on your Raspberry Pi.
 2. Unpack the downloaded file:
 
     ```bash
-    tar -xf V1.2.tar.gz
+    tar -xf V1.3.tar.gz
     ```
 
 ## 6. Install ttkbootstrap
