@@ -43,13 +43,13 @@ def get_product_price(db_conn):
 
 def add_user(db_conn, user=User):
     cur = db_conn.cursor()
-    cur.execute("INSERT INTO statistics (user, balance) VALUES(?, ?)", (user.username, user.balance))
+    cur.execute("INSERT INTO statistics (user, debts) VALUES(?, ?)", (user.username, user.debts))
     db_conn.commit()
 
 
 def update_user_debt(db_conn, user=User):
     cur = db_conn.cursor()
-    cur.execute("UPDATE statistics SET balance=? WHERE id=(?)", (user.balance, user.id))
+    cur.execute("UPDATE statistics SET debts=? WHERE id=(?)", (user.debts, user.id))
     cur.execute("UPDATE statistics SET consumed=? WHERE id=(?)", (user.consumed, user.id))
     db_conn.commit()
 

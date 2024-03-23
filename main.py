@@ -19,7 +19,7 @@ class App(tk.Tk):
         # VKeyboard(self)
 
         # Configure the toplevel
-        self.title("Cafe App")
+        self.title("AIBE Coffee")
         self.attributes("-fullscreen", True)
 
         #  Configure label style
@@ -48,22 +48,26 @@ class App(tk.Tk):
         with db_conn:
             users = get_users(db_conn)
             for user in users:
-                self.users.append(User(id=user[0], username=user[1], balance=user[2]))
+                self.users.append(User(id=user[0], username=user[1], debts=user[2]))
             self.items_price_dict = get_products_list(db_conn)
 
         # Add data to the treeview.
         for user in self.users:
-            self.content_tree.insert('', tk.END, values=[user.username, user.balance])
+            self.content_tree.insert('', tk.END, values=[user.username, user.debts])
 
         self.button_add = ttk.Button(self,
-                                     text="Add User",
-                                     command=self.call_adduser_popup)
-        self.button_add.pack()
+                         text="Add User",
+                         command=self.call_adduser_popup)
+
+        # increase button size and pack
+        self.button_add.pack(fill='x', ipady=100, padx=200, pady=10)
+
+        self.bind("<Escape>", self.close_app)
 
     def create_tree(self, parent):
-        columns = ('name', 'balance')
+        columns = ('name', 'debts')
         style = Style()
-        font_size = 24
+        font_size = 36
         style.configure('Treeview.Heading', font='None, 28')
         style.configure('Treeview', font=f'None, {font_size}', rowheight=int(font_size*1.6))
         style.configure("Custom.Vertical.TScrollbar", arrowsize=60)
@@ -71,7 +75,7 @@ class App(tk.Tk):
         tree = ttk.Treeview(parent, columns=columns, show='headings', height=6)
         tree.heading(columns[0], text='Name')
         tree.column(columns[0], anchor=tk.CENTER, stretch=tk.NO, width=350)
-        tree.heading(columns[1], text='Balance')
+        tree.heading(columns[1], text='Debts')
         tree.column(columns[1], anchor=tk.CENTER, stretch=tk.NO, width=350)
         tree.bind('<<TreeviewSelect>>', self.user_selected)
         tree.grid(column=0, row=0, pady=20)
@@ -96,7 +100,7 @@ class App(tk.Tk):
 
         # Update the tree.
         user = self.users[user_idx]
-        self.content_tree.item(selected_item[0], values=[user.username, user.balance])
+        self.content_tree.item(selected_item[0], values=[user.username, user.debts])
         # Update database.
         db_conn = create_connection(self.database)
         with db_conn:
@@ -105,29 +109,32 @@ class App(tk.Tk):
     def exit(self):
         pass
 
+    def close_app(self, event):
+        self.destroy()
+
     def call_items_popup(self):
         # Get item price and return it.
         return PopupWindowItems(self).get_price()
 
     def call_adduser_popup(self):
-        name, balance = PopupNewUser(self).get_user()
+        name, debts = PopupNewUser(self).get_user()
         if name == "":
             return
-        self.update_new_user(name, balance)
+        self.update_new_user(name, debts)
 
-    def update_new_user(self, name, balance):
-        user = User(username=name, balance=balance)
+    def update_new_user(self, name, debts):
+        user = User(username=name, debts=debts)
         db_conn = create_connection(self.database)
         self.users = []
         with db_conn:
             add_user(db_conn, user)
             users = get_users(db_conn)
             for user in users:
-                self.users.append(User(id=user[0], username=user[1], balance=user[2]))
+                self.users.append(User(id=user[0], username=user[1], debts=user[2]))
         # Add data to the treeview.
         self.content_tree.delete(*self.content_tree.get_children())
         for user in self.users:
-            self.content_tree.insert('', tk.END, values=[user.username, user.balance])
+            self.content_tree.insert('', tk.END, values=[user.username, user.debts])
 
 
 class PopupWindowItems(tk.Toplevel):

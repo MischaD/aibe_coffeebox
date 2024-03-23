@@ -12,24 +12,16 @@ from ttkbootstrap import Style
 class User:
     id: int = 0
     username: str = ''
-    balance: float = 0.0
+    debts: float = 0.0
     consumed: float = 0.0
     paid: float = 0.0
 
     def calculate_debt(self, item_price):
-        scaling_factor = 1
-        if self.balance < -50.0:
-            messagebox.showinfo("Warning", "Debt higher than 50€!\n You will be charged 100% more!")
-            scaling_factor = 2
-        elif self.balance < -25.0:
-            messagebox.showinfo("Warning", "Debt higher than 25€! You will be charged 50% more!")
-            scaling_factor = 1.5
-
-        self.balance = round(self.balance - item_price*scaling_factor, 2)
-        self.consumed = round(self.consumed + item_price*scaling_factor, 2)
+        self.debts = round(self.debts - item_price, 2)
+        self.consumed = round(self.consumed + item_price, 2)
 
     def pay_debt(self, amount):
-        self.balance = round(self.balance + amount, 2)
+        self.debts = round(self.debts + amount, 2)
 
 
 class ValidatedMixin:
@@ -199,25 +191,18 @@ class NewUserForm(ttk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.svar_name = tk.StringVar()
-        self.svar_balance = tk.StringVar()
 
         window_height = super().winfo_screenheight()
         window_width = super().winfo_screenwidth()
-        input_width = int(window_width/40)
-        label_width = int(window_width/60)
+        input_width = int(window_width/20)
+        label_width = int(window_width/100)
         button_width = int(window_width/5)
 
         LabelInput(self, "Name", self.svar_name,
                    input_class=ValidatedStringEntry,
                    input_args={"width": input_width, "style": 'primary.TEntry', "font": 'Helvetica 18'},
                    label_args={"width": label_width, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
-                   ).grid(row=0, column=0, sticky=tk.N)
-
-        LabelInput(self, "Credit", self.svar_balance,
-                   input_class=ValidatedNumEntry,
-                   input_args={"width": input_width, "style": 'primary.TEntry', "font": 'Helvetica 18'},
-                   label_args={"width": label_width, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
-                   ).grid(row=1, column=0, sticky=tk.N)
+                   ).grid(row=0, column=0, sticky=tk.N, pady=50)
 
         self.keyboard = VKeyboard(self)
         self.keyboard.grid(row=2)
@@ -259,20 +244,15 @@ class NewUserForm(ttk.Frame):
         if not self.svar_name.get():
             messagebox.showerror("Error", "Name needed!", parent=self)
             return
-        value = self.svar_balance.get()
-        try:
-            d_value = Decimal(value)
-        except InvalidOperation:
-            messagebox.showerror("Error", "Credit needed!", parent=self)
-            return
-        self.master.balance = float(self.svar_balance.get())
+
+        self.master.debts = 0
         self.master.name = self.svar_name.get()
         self.master.destroy()
 
 
 class PopupNewUser(tk.Toplevel):
     name = ""
-    balance = 0
+    debts = 0
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -289,7 +269,7 @@ class PopupNewUser(tk.Toplevel):
 
     def get_user(self):
         self.wait_window()
-        return self.name, self.balance
+        return self.name, self.debts
 
 
 class PopupPay(tk.Toplevel):

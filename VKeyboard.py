@@ -36,8 +36,8 @@ class VKeyboard(ttk.Frame):
 
         all_properties = {"padx": 1,
                           "pady": 1,
-                          "ipadx": 1,
-                          "ipady": 10}
+                          "ipadx": 10,
+                          "ipady": 15}
 
         space_button_width = self.window_width/4
         button_width = 4
