@@ -1,10 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
+import threading
 import os
 from user import *
 from db_functions import *
 from VKeyboard import VKeyboard
 from ttkbootstrap import Style
+from shelly_log import log_voltage_main
 
 
 class App(tk.Tk):
@@ -188,6 +190,19 @@ class PopupWindowItems(tk.Toplevel):
 
 
 if __name__ == "__main__":
+    # Signal for background thread to stop
+    stop_signal = threading.Event()
+
+    # Create and start the thread
+    thread = threading.Thread(target=log_voltage_main, args=(stop_signal,))
+    # Start the thread
+    thread.start()
+
+    # continue
     app = App()
     style = Style()
     app.mainloop()
+
+    stop_signal.set()
+    # Wait for the thread to finish
+    thread.join()
