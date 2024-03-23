@@ -192,19 +192,19 @@ class NewUserForm(ttk.Frame):
         super().__init__(*args, **kwargs)
         self.svar_name = tk.StringVar()
 
-        window_height = super().winfo_screenheight()
         window_width = super().winfo_screenwidth()
         input_width = int(window_width/20)
         label_width = int(window_width/100)
         button_width = int(window_width/5)
 
-        LabelInput(self, "Name", self.svar_name,
+        label_input = LabelInput(self, "Name", self.svar_name,
                    input_class=ValidatedStringEntry,
                    input_args={"width": input_width, "style": 'primary.TEntry', "font": 'Helvetica 18'},
                    label_args={"width": label_width, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
-                   ).grid(row=0, column=0, sticky=tk.N, pady=50)
+                   )
+        label_input.grid(row=0, column=0, sticky=tk.N, pady=50)
 
-        self.keyboard = VKeyboard(self)
+        self.keyboard = VKeyboard(self, label_input.input)
         self.keyboard.grid(row=2)
 
         buttons = tk.Frame(self)
@@ -266,7 +266,7 @@ class PopupNewUser(tk.Toplevel):
         self.style.map('TButton', foreground=[
             ('disabled', 'white'),
             ('active', 'yellow')])
-
+        
     def get_user(self):
         self.wait_window()
         return self.name, self.debts
