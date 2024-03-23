@@ -2,11 +2,13 @@ import tkinter as tk
 from tkinter import ttk
 import threading
 import os
+import time
 from user import *
 from db_functions import *
 from VKeyboard import VKeyboard
 from ttkbootstrap import Style
 from shelly_log import log_voltage_main
+from functools import partial
 
 
 class App(tk.Tk):
@@ -91,8 +93,7 @@ class App(tk.Tk):
     def user_selected(self, event):
         selected_item = self.content_tree.selection()
         user_idx = self.content_tree.index(selected_item[0])
-
-        amount, payment = self.call_items_popup()
+        amount, payment = self.call_items_popup(self.users[user_idx])
         if payment:
             self.users[user_idx].pay_debt(amount)
         elif amount == 0:
@@ -107,6 +108,9 @@ class App(tk.Tk):
         db_conn = create_connection(self.database)
         with db_conn:
             update_user_debt(db_conn, user)
+            
+            # TODO: add consumed product to database
+            add_consumed_product()
 
     def exit(self):
         pass
@@ -114,9 +118,9 @@ class App(tk.Tk):
     def close_app(self, event):
         self.destroy()
 
-    def call_items_popup(self):
+    def call_items_popup(self ,user):
         # Get item price and return it.
-        return PopupWindowItems(self).get_price()
+        return PopupWindowItems(self, user).get_price()
 
     def call_adduser_popup(self):
         name, debts = PopupNewUser(self).get_user()
@@ -143,7 +147,7 @@ class PopupWindowItems(tk.Toplevel):
     value = 0
     payment = False
 
-    def __init__(self, parent):
+    def __init__(self, parent, user):
         super().__init__(parent)
         self.title("Select")
 
@@ -175,8 +179,8 @@ class PopupWindowItems(tk.Toplevel):
                                        command=self.destroy)
         self.button_close.pack(fill='x', ipady=6)
 
-    def open_pay_popup(self):
-        self.value = PopupPay(self).get_value()
+    def open_pay_popup(self, user):
+        self.value = PopupPay(self, user).get_value()
         self.payment = True
         self.destroy()
 

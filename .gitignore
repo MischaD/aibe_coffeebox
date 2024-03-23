@@ -6,3 +6,4 @@ __pycache__/
 img/.DS_Store
 /test
 CopyPyFiles.ps1
+*.log

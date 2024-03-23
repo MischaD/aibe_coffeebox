@@ -6,6 +6,7 @@ from VKeyboard import VKeyboard
 from tkinter import messagebox
 from decimal import Decimal, InvalidOperation
 from ttkbootstrap import Style
+from payment import get_payment_img_path
 
 
 @dataclass
@@ -17,7 +18,7 @@ class User:
     paid: float = 0.0
 
     def calculate_debt(self, item_price):
-        self.debts = round(self.debts - item_price, 2)
+        self.debts = round(self.debts + item_price, 2)
         self.consumed = round(self.consumed + item_price, 2)
 
     def pay_debt(self, amount):
@@ -277,7 +278,8 @@ class PopupPay(tk.Toplevel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.title('Pay')
+
+        self.title(f'Pay: {self.user.debts}')
         self.attributes("-fullscreen", True)
         self.svar_amount = tk.StringVar()
 
@@ -286,16 +288,17 @@ class PopupPay(tk.Toplevel):
         label_width = int(window_width / 60)
         button_width = int(window_width / 5)
 
-        LabelInput(self, "Credit", self.svar_amount,
-                   input_class=ValidatedNumEntry,
-                   input_args={"width": input_width, "style": 'primary.TEntry', "font": 'Helvetica 18'},
-                   label_args={"width": label_width, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
-                   ).grid(row=1, column=0, sticky=tk.N)
-        self.keyboard = VKeyboard(self)
-        self.keyboard.grid(row=2)
+        #LabelInput(self, "Credit", self.svar_amount,
+        #           input_class=ValidatedNumEntry,
+        #           input_args={"width": input_width, "style": 'primary.TEntry', "font": 'Helvetica 18'},
+        #           label_args={"width": label_width, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
+        #           ).grid(row=1, column=0, sticky=tk.N)
+        #self.keyboard = VKeyboard(self)
+        #self.keyboard.grid(row=2)
 
-        buttons = tk.Frame(self)
-        buttons.grid(row=3)
+        path = get_payment_img_path()
+        #buttons = tk.Frame(self)
+        #buttons.grid(row=3)
 
         self.save_button = ttk.Button(buttons,
                                       text="Save",
