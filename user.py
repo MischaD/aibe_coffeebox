@@ -275,68 +275,52 @@ class PopupNewUser(tk.Toplevel):
 
 class PopupPay(tk.Toplevel):
     value = 0
+    payment = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.title(f'Pay: {self.user.debts}')
+        self.title("Payment Form")
         self.attributes("-fullscreen", True)
-        self.svar_amount = tk.StringVar()
 
-        window_width = super().winfo_screenwidth()
-        input_width = int(window_width / 40)
-        label_width = int(window_width / 60)
-        button_width = int(window_width / 5)
+        self.frame = ttk.Frame(self)
+        self.frame.pack(expand=True, fill='both')
 
-        #LabelInput(self, "Credit", self.svar_amount,
-        #           input_class=ValidatedNumEntry,
-        #           input_args={"width": input_width, "style": 'primary.TEntry', "font": 'Helvetica 18'},
-        #           label_args={"width": label_width, "style": 'primary.Inverse.TLabel', "anchor": 'center'},
-        #           ).grid(row=1, column=0, sticky=tk.N)
-        #self.keyboard = VKeyboard(self)
-        #self.keyboard.grid(row=2)
+        # Assuming self.master.user exists and has the necessary attributes
+        self.user = self.master.user
+        self.header_label = ttk.Label(self.frame,
+                                       text=f"User: {self.user.username} - Pay amount:  {self.user.debts}")
+        self.header_label.grid(column=0, row=0, columnspan=2)  # Spanning across both button columns
 
-        path = get_payment_img_path()
-        #buttons = tk.Frame(self)
-        #buttons.grid(row=3)
+        # QR Code Image
+        self.qr = tk.PhotoImage(file=get_payment_img_path(self.master.user.debts))
+        self.header_logo = ttk.Label(self.frame, image=self.qr)
+        self.header_logo.grid(column=0, row=1, columnspan=2)  # Adjusting to span both columns
 
-        self.save_button = ttk.Button(buttons,
-                                      text="Save",
-                                      style='success.TButton',
-                                      command=self._on_save)
-        self.save_button.grid(row=0,
-                              column=0,
-                              sticky=tk.W + tk.E,
-                              rowspan=2,
-                              padx=2,
-                              pady=2,
-                              ipadx=button_width,
-                              ipady=10)
+        # Buttons with uniform size and spacing
+        self.save_button = ttk.Button(self.frame, text="Back", style='danger.TButton', command=self.destroy)
+        self.save_button.grid(row=2, column=0, sticky=tk.EW, padx=5, pady=2)
 
-        self.close_button = ttk.Button(buttons,
-                                       text="Close",
-                                       style='danger.TButton',
-                                       command=self.master.destroy)
-        self.close_button.grid(row=0,
-                               column=1,
-                               sticky=tk.W + tk.E,
-                               rowspan=2,
-                               padx=2,
-                               pady=2,
-                               ipadx=button_width,
-                               ipady=10)
+        self.close_button = ttk.Button(self.frame, text="Pay", style='success.TButton', command=self._on_paid)
+        self.close_button.grid(row=2, column=1, sticky=tk.EW, padx=5, pady=2)
 
-    def get_value(self):
+        # Configure the frame's grid to center content and equalize button sizes
+        self.frame.columnconfigure(0, weight=1, uniform='btn')
+        self.frame.columnconfigure(1, weight=1, uniform='btn')
+        self.frame.rowconfigure(0, weight=1)
+        self.frame.rowconfigure(1, weight=1)
+        self.frame.rowconfigure(2, weight=1)
+
+        # Ensuring the window and its content are updated to apply layout changes
+        self.update()   
+
+    def do_payment(self):
         self.wait_window()
-        return self.value
+        return self.amount, self.payment
 
-    def _on_save(self):
-        self.value = float(self.svar_amount.get())
-        try:
-            d_value = Decimal(self.value)
-        except InvalidOperation:
-            messagebox.showerror("Error", "Enter valid amount!")
-            return
+    def _on_paid(self):
+        self.amount = -1 * self.user.debts # paied debts
+        self.payment = True
         self.destroy()
 
 

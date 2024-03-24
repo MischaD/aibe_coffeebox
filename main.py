@@ -94,12 +94,14 @@ class App(tk.Tk):
         selected_item = self.content_tree.selection()
         user_idx = self.content_tree.index(selected_item[0])
         amount, payment = self.call_items_popup(self.users[user_idx])
+
         if payment:
             self.users[user_idx].pay_debt(amount)
         elif amount == 0:
             pass
         else:
             self.users[user_idx].calculate_debt(amount)
+
 
         # Update the tree.
         user = self.users[user_idx]
@@ -110,7 +112,7 @@ class App(tk.Tk):
             update_user_debt(db_conn, user)
             
             # TODO: add consumed product to database
-            add_consumed_product()
+            #add_consumed_product()
 
     def exit(self):
         pass
@@ -150,6 +152,7 @@ class PopupWindowItems(tk.Toplevel):
     def __init__(self, parent, user):
         super().__init__(parent)
         self.title("Select")
+        self.user = user
 
         self.products_dict = parent.items_price_dict
 
@@ -179,10 +182,10 @@ class PopupWindowItems(tk.Toplevel):
                                        command=self.destroy)
         self.button_close.pack(fill='x', ipady=6)
 
-    def open_pay_popup(self, user):
-        self.value = PopupPay(self, user).get_value()
-        self.payment = True
-        self.destroy()
+    def open_pay_popup(self):
+        self.value, self.payment = PopupPay(self).do_payment()
+        if self.payment: 
+            self.destroy()
 
     def get_selected_price(self, price):
         self.value = price
@@ -191,7 +194,6 @@ class PopupWindowItems(tk.Toplevel):
     def get_price(self):
         self.wait_window()
         return self.value, self.payment
-
 
 if __name__ == "__main__":
     # Signal for background thread to stop
