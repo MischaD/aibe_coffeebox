@@ -101,9 +101,12 @@ def add_products(db_conn):
     Add some products to the database
     """
     # TODO: Add more products
-    _add_product(db_conn, ("coffee", 0.3))
-    # _add_product(db_conn, ("beer", 2.5))
-    # _add_product(db_conn, ("wine", 0.3))
+    _add_product(db_conn, ("coffee/americano", 0.30))
+    _add_product(db_conn, ("coffee/americano with sugar", 0.35))
+    _add_product(db_conn, ("coffee/americano with milk", 0.35))
+    _add_product(db_conn, ("coffee/americano with sugar and milk", 0.40))
+    _add_product(db_conn, ("cappuccino/macchiato", 0.40))
+    _add_product(db_conn, ("glass of milk", 0.50))
 
 #################################################################
 # CONSUME
@@ -116,8 +119,9 @@ def add_consumed_product(db_conn, user: User, product: str, time_stamp: str):
     :param product: the name of the product
     :param time_stamp: the time of the consumption
     """
+    print(user.username, product, time_stamp)
     cur = db_conn.cursor()
-    cur.execute("INSERT INTO consumed (user, product, time_stamp) VALUES(?, ?, ?)", (user, product, time_stamp))
+    cur.execute("INSERT INTO consumed (user, product, time_stamp) VALUES(?, ?, ?)", (user.username, product, time_stamp))
     db_conn.commit()
 
 

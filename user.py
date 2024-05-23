@@ -289,7 +289,7 @@ class PopupPay(tk.Toplevel):
         # Assuming self.master.user exists and has the necessary attributes
         self.user = self.master.user
         self.header_label = ttk.Label(self.frame,
-                                       text=f"User: {self.user.username} - Pay amount:  {self.user.debts}")
+                                       text=f"User: {self.user.username} - Pay amount:  {self.user.debts} €")
         self.header_label.grid(column=0, row=0, columnspan=2)  # Spanning across both button columns
 
         # QR Code Image
@@ -316,10 +316,10 @@ class PopupPay(tk.Toplevel):
 
     def do_payment(self):
         self.wait_window()
-        return self.amount, self.payment
+        return self.value, self.payment
 
     def _on_paid(self):
-        self.amount = -1 * self.user.debts # paied debts
+        self.value = -1 * self.user.debts # paied debts
         self.payment = True
         self.destroy()
 

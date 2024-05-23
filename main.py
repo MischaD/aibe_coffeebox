@@ -102,7 +102,6 @@ class App(tk.Tk):
         else:
             self.users[user_idx].calculate_debt(amount)
 
-
         # Update the tree.
         user = self.users[user_idx]
         self.content_tree.item(selected_item[0], values=[user.username, user.debts])
@@ -111,8 +110,9 @@ class App(tk.Tk):
         with db_conn:
             update_user_debt(db_conn, user)
             
-            # TODO: add consumed product to database
-            #add_consumed_product()
+            # Add consumed product to database
+            timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+            add_consumed_product(db_conn, user, selected_item[0], timestamp)
 
     def exit(self):
         pass
@@ -164,14 +164,24 @@ class PopupWindowItems(tk.Toplevel):
         self.style = Style()
         self.style.configure('TButton', font=('Helvetica', 24))
 
+        max_item_length = max(len(item) for item in self.products_dict.keys())  # Max length of item names
         self.button_item = []
-        for item, price in self.products_dict.items():
-            display_string = f"{item:<18}\t\t{price} €"
-            self.button_item = ttk.Button(self, text=display_string, command=lambda m=price: self.get_selected_price(m))
-            self.button_item.pack(fill='x', ipady=6)
+        for i, (item, price) in enumerate(self.products_dict.items()):
+            # Format each item name to be left-justified, ensuring all names occupy the same width
+            padded_item = item.ljust(max_item_length)
+            
+            # Format price to always have two decimal places
+            formatted_price = f"{price:.2f} €"
+            
+            # Construct the display string with consistent spacing between item and price
+            display_string = f"{padded_item}{' ' * 4}{formatted_price}"
+            
+            button = ttk.Button(self, text=display_string, command=lambda m=price: self.get_selected_price(m))
+
+            button.pack(fill='x', ipady=6)
 
         self.button_pay = ttk.Button(self,
-                                     text="Pay Debt!!",
+                                     text="Pay Debt",
                                      style='info.TButton',
                                      command=self.open_pay_popup)
         self.button_pay.pack(fill='x', ipady=6)
