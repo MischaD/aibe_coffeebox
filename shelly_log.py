@@ -11,7 +11,7 @@ SAVE_INTERVAL = 10  # save file every seconds
 
 def log_voltage_main(stop_signal, verbose=False): 
     # The URL to which you're sending the request
-    url = "http://192.168.137.80/rpc/Shelly.GetStatus"
+    url = "http://192.168.137.133/rpc/Shelly.GetStatus"
 
     # The JSON-RPC payload
     payload = {

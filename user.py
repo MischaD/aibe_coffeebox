@@ -152,7 +152,7 @@ class ValidatedStringEntry(ValidatedMixin, ttk.Entry):
         if char.isalpha() or char.isspace():
             return True
 
-        Error("Only characters allowed!")
+        # Error("Only characters allowed!")
         return False
 
     def _focusout_validate(self, event):

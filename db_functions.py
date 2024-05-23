@@ -100,11 +100,10 @@ def add_products(db_conn):
     """
     Add some products to the database
     """
-    # TODO: Add more products
     _add_product(db_conn, ("coffee/americano", 0.30))
-    _add_product(db_conn, ("coffee/americano with sugar", 0.35))
-    _add_product(db_conn, ("coffee/americano with milk", 0.35))
-    _add_product(db_conn, ("coffee/americano with sugar and milk", 0.40))
+    _add_product(db_conn, ("coffee/americano (sugar)", 0.35))
+    _add_product(db_conn, ("coffee/americano (milk)", 0.35))
+    _add_product(db_conn, ("coffee/americano (sugar&milk)", 0.40))
     _add_product(db_conn, ("cappuccino/macchiato", 0.40))
     _add_product(db_conn, ("glass of milk", 0.50))
 
