@@ -1,12 +1,14 @@
 import sqlite3
 from sqlite3 import Error
+
 from user import User
+
 
 #################################################################
 # GENERAL
 #################################################################
 def create_connection(db_file):
-    """ create a database connection to the SQLite database
+    """create a database connection to the SQLite database
         specified by the db_file
     :param db_file: database file
     :return: Connection object or None
@@ -18,19 +20,25 @@ def create_connection(db_file):
         print(e)
     return db_conn
 
+
 def init_table(db_conn):
-    """ 
+    """
     Initialize the database with the necessary tables
     """
     cur = db_conn.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS statistics (id INTEGER PRIMARY KEY, user TEXT, debts REAL, consumed REAL)")
+    cur.execute(
+        "CREATE TABLE IF NOT EXISTS statistics (id INTEGER PRIMARY KEY, user TEXT, debts REAL, consumed REAL)"
+    )
     cur.execute("CREATE TABLE IF NOT EXISTS products (name TEXT, price REAL)")
-    cur.execute("CREATE TABLE IF NOT EXISTS consumed (id INTEGER PRIMARY KEY, user TEXT, product TEXT, time_stamp TEXT)")
+    cur.execute(
+        "CREATE TABLE IF NOT EXISTS consumed (id INTEGER PRIMARY KEY, user TEXT, product TEXT, time_stamp TEXT)"
+    )
     db_conn.commit()
+
 
 def get_products_list(db_conn):
     """
-    Get the list of products and their prices    
+    Get the list of products and their prices
     """
     cur = db_conn.cursor()
     cur.execute("SELECT * FROM products")
@@ -40,6 +48,7 @@ def get_products_list(db_conn):
     row2 = [item[1] for item in products_list]
     items_price_dict = dict(zip(row1, row2))
     return items_price_dict
+
 
 #################################################################
 # USERS
@@ -53,21 +62,29 @@ def get_users(db_conn):
     users = cur.fetchall()
     return users
 
+
 def add_user(db_conn, user=User):
     """
     Add a user to the database
     """
     cur = db_conn.cursor()
-    cur.execute("INSERT INTO statistics (user, debts) VALUES(?, ?)", (user.username, user.debts))
+    cur.execute(
+        "INSERT INTO statistics (user, debts) VALUES(?, ?)",
+        (user.username, user.debts),
+    )
     db_conn.commit()
+
 
 def update_user_debt(db_conn, user=User):
     """
     Update the user's debt in the database
     """
     cur = db_conn.cursor()
-    cur.execute("UPDATE statistics SET debts=? WHERE id=(?)", (user.debts, user.id))
+    cur.execute(
+        "UPDATE statistics SET debts=? WHERE id=(?)", (user.debts, user.id)
+    )
     db_conn.commit()
+
 
 #################################################################
 # PRODUCTS
@@ -81,6 +98,7 @@ def get_product_price(db_conn, product: str):
     cur = db_conn.cursor()
     cur.execute("SELECT * FROM products WHERE name=?", (product,))
 
+
 def _add_product(db_conn, product: tuple):
     """
     Add a product to the database
@@ -93,8 +111,12 @@ def _add_product(db_conn, product: tuple):
     if existing_product:
         print("Product already exists")
     else:
-        cur.execute("INSERT INTO products (name, price) VALUES(?, ?)", (product[0], product[1]))
+        cur.execute(
+            "INSERT INTO products (name, price) VALUES(?, ?)",
+            (product[0], product[1]),
+        )
         db_conn.commit()
+
 
 def add_products(db_conn):
     """
@@ -106,6 +128,7 @@ def add_products(db_conn):
     _add_product(db_conn, ("coffee/americano (sugar&milk)", 0.40))
     _add_product(db_conn, ("cappuccino/macchiato", 0.40))
     _add_product(db_conn, ("glass of milk", 0.50))
+
 
 #################################################################
 # CONSUME
@@ -120,7 +143,10 @@ def add_consumed_product(db_conn, user: User, product: str, time_stamp: str):
     """
     print(user.username, product, time_stamp)
     cur = db_conn.cursor()
-    cur.execute("INSERT INTO consumed (user, product, time_stamp) VALUES(?, ?, ?)", (user.username, product, time_stamp))
+    cur.execute(
+        "INSERT INTO consumed (user, product, time_stamp) VALUES(?, ?, ?)",
+        (user.username, product, time_stamp),
+    )
     db_conn.commit()
 
 
