@@ -1,22 +1,24 @@
-import tkinter as tk
-from tkinter import ttk
-import threading
 import os
+import threading
 import time
-from user import *
-from db_functions import *
-from VKeyboard import VKeyboard
-from ttkbootstrap import Style
-from shelly_log import log_voltage_main
-from functools import partial
+import tkinter as tk
 from datetime import datetime
+from functools import partial
+from tkinter import ttk
+
+from ttkbootstrap import Style
+
+from db_functions import *
+from shelly_log import log_voltage_main
+from user import *
+from VKeyboard import VKeyboard
 
 
 class App(tk.Tk):
     path_to_file = os.path.abspath(__file__)
     dir_path = os.path.dirname(path_to_file)
-    database = dir_path+"/database/kittybase.sqlite3"
-    
+    database = dir_path + "/database/kittybase.sqlite3"
+
     def __init__(self):
         super().__init__()
 
@@ -34,12 +36,12 @@ class App(tk.Tk):
         # Head frame
         self.frame_header = ttk.Frame()
         self.frame_header.pack(pady=0)
-        self.logo = tk.PhotoImage(file=self.dir_path+'/img/cafe_logo.png')
-        self.header_logo = ttk.Label(self.frame_header,
-                                     image=self.logo)
+        self.logo = tk.PhotoImage(file=self.dir_path + '/img/cafe_logo.png')
+        self.header_logo = ttk.Label(self.frame_header, image=self.logo)
         self.header_logo.grid(column=0, row=0)
-        self.header_label1 = ttk.Label(self.frame_header,
-                                       text="Please select who you are:")
+        self.header_label1 = ttk.Label(
+            self.frame_header, text="Please select who you are:"
+        )
         self.header_label1.grid(column=1, row=0)
 
         # Content frame
@@ -47,22 +49,26 @@ class App(tk.Tk):
         self.frame_content.pack()
         self.frame_content.columnconfigure(0, weight=1)
         self.content_tree = self.create_tree(self.frame_content)
-        
+
         self.users = []
         db_conn = create_connection(self.database)
         with db_conn:
             users = get_users(db_conn)
             for user in users:
-                self.users.append(User(id=user[0], username=user[1], debts=user[2]))
+                self.users.append(
+                    User(id=user[0], username=user[1], debts=user[2])
+                )
             self.items_price_dict = get_products_list(db_conn)
 
         # Add data to the treeview.
         for user in self.users:
-            self.content_tree.insert('', tk.END, values=[user.username, user.debts])
+            self.content_tree.insert(
+                '', tk.END, values=[user.username, user.debts]
+            )
 
-        self.button_add = ttk.Button(self,
-                         text="Add User",
-                         command=self.call_adduser_popup)
+        self.button_add = ttk.Button(
+            self, text="Add User", command=self.call_adduser_popup
+        )
 
         # increase button size and pack
         self.button_add.pack(fill='x', ipady=100, padx=200, pady=10)
@@ -74,7 +80,11 @@ class App(tk.Tk):
         style = Style()
         font_size = 36
         style.configure('Treeview.Heading', font='None, 28')
-        style.configure('Treeview', font=f'None, {font_size}', rowheight=int(font_size*1.6))
+        style.configure(
+            'Treeview',
+            font=f'None, {font_size}',
+            rowheight=int(font_size * 1.6),
+        )
         style.configure("Custom.Vertical.TScrollbar", arrowsize=60)
 
         tree = ttk.Treeview(parent, columns=columns, show='headings', height=6)
@@ -84,8 +94,13 @@ class App(tk.Tk):
         tree.column(columns[1], anchor=tk.CENTER, stretch=tk.NO, width=350)
         tree.bind('<<TreeviewSelect>>', self.user_selected)
         tree.grid(column=0, row=0, pady=20)
-    
-        scrollbar = ttk.Scrollbar(parent, orient=tk.VERTICAL, style="Custom.Vertical.TScrollbar", command=tree.yview)
+
+        scrollbar = ttk.Scrollbar(
+            parent,
+            orient=tk.VERTICAL,
+            style="Custom.Vertical.TScrollbar",
+            command=tree.yview,
+        )
         tree.configure(yscroll=scrollbar.set)
         scrollbar.grid(row=0, column=1, sticky='ns')
 
@@ -105,17 +120,23 @@ class App(tk.Tk):
 
         # Update the tree.
         user = self.users[user_idx]
-        self.content_tree.item(selected_item[0], values=[user.username, user.debts])
+        self.content_tree.item(
+            selected_item[0], values=[user.username, user.debts]
+        )
         # Update database.
         db_conn = create_connection(self.database)
         with db_conn:
             update_user_debt(db_conn, user)
-            
+
             # Add consumed product to database
-            dt = datetime.now() 
+            dt = datetime.now()
             if item is not None:
-                add_consumed_product(db_conn, user, product=item, time_stamp=dt.strftime("%Y-%m-%d--%H-%M-%S.%f"))
-        
+                add_consumed_product(
+                    db_conn,
+                    user,
+                    product=item,
+                    time_stamp=dt.strftime("%Y-%m-%d--%H-%M-%S.%f"),
+                )
 
     def exit(self):
         pass
@@ -123,7 +144,7 @@ class App(tk.Tk):
     def close_app(self, event):
         self.destroy()
 
-    def call_items_popup(self ,user):
+    def call_items_popup(self, user):
         # Get item price and return it.
         return PopupWindowItems(self, user).get_price()
 
@@ -141,11 +162,15 @@ class App(tk.Tk):
             add_user(db_conn, user)
             users = get_users(db_conn)
             for user in users:
-                self.users.append(User(id=user[0], username=user[1], debts=user[2]))
+                self.users.append(
+                    User(id=user[0], username=user[1], debts=user[2])
+                )
         # Add data to the treeview.
         self.content_tree.delete(*self.content_tree.get_children())
         for user in self.users:
-            self.content_tree.insert('', tk.END, values=[user.username, user.debts])
+            self.content_tree.insert(
+                '', tk.END, values=[user.username, user.debts]
+            )
 
 
 class PopupWindowItems(tk.Toplevel):
@@ -172,25 +197,30 @@ class PopupWindowItems(tk.Toplevel):
         for i, (item, price) in enumerate(self.products_dict.items()):
             # Construct the display string with consistent spacing between item and price
             display_string = f"{item:<28.30}\t\t{price} €"
-            self.button_item = ttk.Button(self, text=display_string, command=lambda m=item, p=price: self.get_selected_item(m, p), 
-                                          style='LeftAlign.TButton')
+            self.button_item = ttk.Button(
+                self,
+                text=display_string,
+                command=lambda m=item, p=price: self.get_selected_item(m, p),
+                style='LeftAlign.TButton',
+            )
             self.button_item.pack(fill='x', ipady=6)
 
-        self.button_pay = ttk.Button(self,
-                                     text="Pay Debt",
-                                     style='info.TButton',
-                                     command=self.open_pay_popup)
+        self.button_pay = ttk.Button(
+            self,
+            text="Pay Debt",
+            style='info.TButton',
+            command=self.open_pay_popup,
+        )
         self.button_pay.pack(fill='x', ipady=6)
 
-        self.button_close = ttk.Button(self,
-                                       text="Close",
-                                       style='danger.TButton',
-                                       command=self.destroy)
+        self.button_close = ttk.Button(
+            self, text="Close", style='danger.TButton', command=self.destroy
+        )
         self.button_close.pack(fill='x', ipady=6)
 
     def open_pay_popup(self):
         self.value, self.payment = PopupPay(self).do_payment()
-        if self.payment: 
+        if self.payment:
             self.destroy()
 
     def get_selected_item(self, item, price):
@@ -202,7 +232,8 @@ class PopupWindowItems(tk.Toplevel):
         self.wait_window()
         return self.item, self.value, self.payment
 
-if __name__ == "__main__":
+
+def main():
     # Signal for background thread to stop
     stop_signal = threading.Event()
 
@@ -219,3 +250,7 @@ if __name__ == "__main__":
     stop_signal.set()
     # Wait for the thread to finish
     thread.join()
+
+
+if __name__ == '__main__':
+    main()

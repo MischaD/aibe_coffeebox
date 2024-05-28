@@ -9,3 +9,4 @@ CopyPyFiles.ps1
 *.log
 database/
 img/
+*.egg-info

@@ -1,4 +1,5 @@
 import sqlite3
+
 import pandas as pd
 
 db_conn = sqlite3.connect("database/kittybase.sqlite3")
